@@ -108,7 +108,7 @@ def SearchImage():
     ChangeImage(FilePath)
 
 
-def ChangeImage(path='Icons/EmptyProfile001.png'):
+def ChangeImage(path='Icons/template.png'):
     global ProfileImage, ToChangeImage
 
     CleanScreen()
@@ -124,7 +124,7 @@ def ChangeImage(path='Icons/EmptyProfile001.png'):
     DefaultImage.image = ProfileImage
     DefaultImage.pack(side=tk.LEFT, padx=30)
 
-    LineImage = ImageTk.PhotoImage(Image.open('Icons/RoundLine.png'))
+    LineImage = ImageTk.PhotoImage(Image.open('Icons/line.png'))
     RoundLine = tk.Label(FunctionFrame, image=LineImage, bg='#121212')
     RoundLine.image = LineImage
     RoundLine.pack(side=tk.LEFT)

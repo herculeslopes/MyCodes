@@ -13,17 +13,23 @@ MainWindow.state('zoomed')
 # MainWindow.resizable(False, False)
 MainWindow.configure(background='#121212')
 
+def OpenCode(iden):
+
+    TitleLabel = tk.Label(CentralSpace, text=iden)
+    TitleLabel.pack()
+
+
 def CodeList():
 
-    for Item in range(0, 30):
+    for Item in range(0, 15):
 
-        button = tk.Button(ListBar, bg='blue', bd=0)
+        button = tk.Button(ListBar, text=str(Item), bg='#808080', activebackground='#999999', bd=0, command=lambda iden = Item: OpenCode(str(iden)))
         button.pack(padx=5, pady=1, fill=tk.BOTH)
         
 
 def MainView(argv1=1):
 
-    global ListBar
+    global ListBar, CentralSpace
 
     SideBar = tk.Frame(MainWindow, width=250, bg='#242424', bd=0) #212121
     SideBar.pack(side=tk.LEFT, fill=tk.Y)
