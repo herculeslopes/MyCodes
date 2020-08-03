@@ -39,12 +39,12 @@ def CleanScreen():
         widget.destroy()
 
 
-def DiscartProfile():
+def Confirm():
 
     ChooseProfile()
 
 
-def NewProfileStatus():
+def NewProfileStatus(path):
 
     CleanScreen()
 
@@ -54,11 +54,8 @@ def NewProfileStatus():
     StatusWidgetFrame = tk.Frame(ProfileWindow, bg='#121212', bd=0)
     StatusWidgetFrame.pack(pady=20)
 
-    ProfileLabel = tk.Label(StatusWidgetFrame, image=ProfileImage, bg='#121212', bd=0, relief=tk.FLAT)
+    ProfileLabel = tk.Label(StatusWidgetFrame, image=ToChangeImage, bg='#121212', bd=0, relief=tk.FLAT)
     ProfileLabel.pack(side=tk.LEFT, padx=30)
-
-    # print(UsernameGiven)
-    # print(PasswordGiven)
 
     LabelFrame = tk.Label(StatusWidgetFrame, bg='#121212', bd=0)
     LabelFrame.pack(side=tk.RIGHT)
@@ -73,14 +70,14 @@ def NewProfileStatus():
     ChoiceFrame.pack(side=tk.BOTTOM, pady=(0, 40))
 
     SaveImage = ImageTk.PhotoImage(Image.open('Icons/save.png'))
-    SaveButton = tk.Button(ChoiceFrame, image=SaveImage, bg='#121212', activebackground='#121212', bd=0, command=SaveProfile)
+    SaveButton = tk.Button(ChoiceFrame, image=SaveImage, bg='#121212', activebackground='#121212', bd=0, command=Confirm)
     SaveButton.image = SaveImage
     SaveButton.pack(side=tk.RIGHT, padx=10)
 
-    DiscartImage = ImageTk.PhotoImage(Image.open('Icons/discart.png'))
+    '''DiscartImage = ImageTk.PhotoImage(Image.open('Icons/discart.png'))
     DiscartButton = tk.Button(ChoiceFrame, image=DiscartImage, bg='#121212', activebackground='#121212',bd=0, command=DiscartProfile)
     DiscartButton.image = DiscartImage
-    DiscartButton.pack(side=tk.LEFT, padx=10)
+    DiscartButton.pack(side=tk.LEFT, padx=10)'''
 
 
 def SaveProfile():
@@ -101,7 +98,7 @@ def SaveProfile():
         print(i)
         sleep(1)'''
 
-    NewProfileStatus()
+    NewProfileStatus(FilePath)
 
 
 def SearchImage():
@@ -112,7 +109,7 @@ def SearchImage():
 
 
 def ChangeImage(path='Icons/EmptyProfile001.png'):
-    global ProfileImage
+    global ProfileImage, ToChangeImage
 
     CleanScreen()
 
@@ -228,7 +225,6 @@ def Submit(Button_id):
     DB_Cursor.execute(f'''SELECT username, password, imagepath FROM Profile WHERE id = {Button_id}''')
     data = DB_Cursor.fetchone()
     password = data[1]
-    print(password)
 
     PasswordGiven = PasswordEntry.get()
 
@@ -251,10 +247,6 @@ def Login(Button_id):
 
     DB_Cursor.execute(f'''SELECT imagepath, username FROM Profile WHERE id = {Button_id}''')
     data = DB_Cursor.fetchone()
-    print('----------------------------------')
-    print(data)
-    print(data[0])
-    print(data[1])
 
     ImageFile = Image.open(data[0])
     IconFile = ImageFile.resize((75, 75), Image.ANTIALIAS)
@@ -292,10 +284,6 @@ def ChooseProfile():
 
     DB_Cursor.execute('''SELECT COUNT(*) FROM Profile''')
     ProfileCounter = DB_Cursor.fetchone()[0]
-    print(ProfileCounter)
-
-    a = DB_Cursor.execute('SELECT id, imagepath FROM Profile where id = 1')
-    print(a.fetchone())
 
     # ImageFile = Image.open('MainProgram/MyCodes006/Icons/default.png')
     # ProfileImage = ImageTk.PhotoImage(ImageFile)
