@@ -15,12 +15,25 @@ MainWindow.state('zoomed')
 MainWindow.configure(background='#121212')
 
 def ConnectToDB():
+    global MyCodesDB, DB_Cursor
 
     MyCodesDB = sqlite3.connect('MyCodesDB.db')
     DB_Cursor = MyCodesDB.cursor()
 
-    DB_Cursor.execute(f'''CREATE TABLE IF NOT EXISTS CodeList{data[3]}
-    ''')
+    DB_Cursor.execute(f'''CREATE TABLE IF NOT EXISTS CodeList_{data[3]} (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT DEAFULT "Give It A Title",
+    description TEXT,
+    language TEXT
+    )''')
+
+
+def CloseConnectionToDB():
+
+    MyCodesDB.commit()
+    DB_Cursor.close()
+    MyCodesDB.close()
+
 
 def ClearScreen():
 
@@ -29,44 +42,77 @@ def ClearScreen():
         widget.destroy()
 
 
-def SaveCard():
+def SaveCard(iden):
+
+    ConnectToDB()
+
+    TextBox.get('1.0', tk.END)
 
     pass
 
 
 def OpenCode(iden):
 
+    global TextBox
+
+    ConnectToDB()
+
+    DB_Cursor.execute(f'''SELECT title FROM CodeList_{data[3]}''')
+    CodeInfo = DB_Cursor.fetchone()
+
     ClearScreen()
 
     LabelFont = Font(size=30)
-    TitleLabel = tk.Label(CentralSpace, text='Número ' + iden, font=LabelFont, fg='#999999', bg='#121212')
+    TitleLabel = tk.Label(CentralSpace, text=CodeInfo[0], font=LabelFont, fg='#999999', bg='#121212')
     TitleLabel.grid(row=0, column=0, padx=50, pady=25, sticky='w')
 
     TextFont = Font(family='Square721 BT', size=18)
     TextBox = tk.Text(CentralSpace, font=TextFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
     TextBox.grid(row=1, column=0, padx=50)
 
-    SaveButton = tk.Button(CentralSpace, text='Save Card', font='Default 15', bg='#333333', activebackground='#333333', fg='#999999', activeforeground='#999999', bd=0, command=SaveCard)
+    SaveButton = tk.Button(CentralSpace, text='Save Card', font='Default 15', bg='#333333', activebackground='#333333', fg='#999999', activeforeground='#999999', bd=0, command=lambda: SaveCard(iden))
     SaveButton.grid(row=2, column=0, padx=50, pady=25, sticky='w')
 
 
 def CodeList():
 
-    for Item in range(0, 30):
+    ConnectToDB()
 
-        button = tk.Button(ListBar, text=str(Item), bg='#808080', activebackground='#999999', bd=0, command=lambda iden = Item: OpenCode(str(iden)))
-        button.pack(padx=5, pady=1, fill=tk.BOTH)
-        
+    DB_Cursor.execute(f'''SELECT COUNT(*) FROM CodeList_{data[3]}''')
+    CodeCounter = DB_Cursor.fetchone()[0]
+
+    if CodeCounter != 0:
+
+        for code in range(1, CodeCounter + 1):
+
+            DB_Cursor.execute(f'''SELECT title FROM CodeList_{data[3]}''')
+            title = DB_Cursor.fetchone()[0]
+
+            button = tk.Button(ListBar, text=title, anchor='w', bg='#616161', fg='#121212', activebackground='#999999', bd=0, command=lambda iden = code: OpenCode(code)) #808080
+            button.pack(padx=5, pady=1, fill=tk.BOTH)
+
+
+def AddCard():
+
+    pass      
+
+def TopBarPacking():
+
+    NewCard = tk.Button(TopBar, text='New Card', bg='#303030', fg='#ffffff', bd=0, command=AddCard)
+    NewCard.pack(padx=2, pady=2, side=tk.LEFT)
+
 
 def MainView(argv1=1):
 
-    global ListBar, CentralSpace
+    global ListBar, CentralSpace, TopBar
 
     SideBar = tk.Frame(MainWindow, width=250, bg='#242424', bd=0) #212121
     SideBar.pack(side=tk.LEFT, fill=tk.Y)
 
     TopBar = tk.Frame(MainWindow, height=30, bg='#242424', bd=0) #303030 262626
     TopBar.pack(side=tk.TOP, fill=tk.X)
+
+    TopBarPacking()
 
     CentralSpace = tk.Frame(MainWindow, bg='#121212', bd=0)
     CentralSpace.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
