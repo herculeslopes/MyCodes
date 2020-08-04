@@ -1,5 +1,6 @@
 from PIL import ImageTk, Image
 import tkinter as tk
+from tkinter.font import Font
 import sys
 import sqlite3
 
@@ -13,15 +14,45 @@ MainWindow.state('zoomed')
 # MainWindow.resizable(False, False)
 MainWindow.configure(background='#121212')
 
+def ConnectToDB():
+
+    MyCodesDB = sqlite3.connect('MyCodesDB.db')
+    DB_Cursor = MyCodesDB.cursor()
+
+    DB_Cursor.execute(f'''CREATE TABLE IF NOT EXISTS CodeList{data[3]}
+    ''')
+
+def ClearScreen():
+
+    for widget in CentralSpace.winfo_children():
+
+        widget.destroy()
+
+
+def SaveCard():
+
+    pass
+
+
 def OpenCode(iden):
 
-    TitleLabel = tk.Label(CentralSpace, text=iden)
-    TitleLabel.pack()
+    ClearScreen()
+
+    LabelFont = Font(size=30)
+    TitleLabel = tk.Label(CentralSpace, text='Número ' + iden, font=LabelFont, fg='#999999', bg='#121212')
+    TitleLabel.grid(row=0, column=0, padx=50, pady=25, sticky='w')
+
+    TextFont = Font(family='Square721 BT', size=18)
+    TextBox = tk.Text(CentralSpace, font=TextFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
+    TextBox.grid(row=1, column=0, padx=50)
+
+    SaveButton = tk.Button(CentralSpace, text='Save Card', font='Default 15', bg='#333333', activebackground='#333333', fg='#999999', activeforeground='#999999', bd=0, command=SaveCard)
+    SaveButton.grid(row=2, column=0, padx=50, pady=25, sticky='w')
 
 
 def CodeList():
 
-    for Item in range(0, 15):
+    for Item in range(0, 30):
 
         button = tk.Button(ListBar, text=str(Item), bg='#808080', activebackground='#999999', bd=0, command=lambda iden = Item: OpenCode(str(iden)))
         button.pack(padx=5, pady=1, fill=tk.BOTH)

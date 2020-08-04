@@ -22,7 +22,7 @@ def ConnectToDB():
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT,
     password TEXT,
-    imagepath TEXT DEFAULT "MainProgram/MyCodes006/Icons/default.png")''')   
+    imagepath TEXT DEFAULT "Icons/default.png")''')   
 
 
 def CloseConnectionToDB():
