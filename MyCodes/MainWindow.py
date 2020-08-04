@@ -35,7 +35,7 @@ def CloseConnectionToDB():
     MyCodesDB.close()
 
 
-def ClearScreen():
+def ClearCentralSpace():
 
     for widget in CentralSpace.winfo_children():
 
@@ -60,7 +60,7 @@ def OpenCode(iden):
     DB_Cursor.execute(f'''SELECT title FROM CodeList_{data[3]}''')
     CodeInfo = DB_Cursor.fetchone()
 
-    ClearScreen()
+    ClearCentralSpace()
 
     LabelFont = Font(size=30)
     TitleLabel = tk.Label(CentralSpace, text=CodeInfo[0], font=LabelFont, fg='#999999', bg='#121212')
@@ -94,13 +94,23 @@ def CodeList():
 
 def AddCard():
 
-    pass      
+    ClearCentralSpace()
+
+    EntryTitle = tk.Entry(CentralSpace, font='OpenSans 30', bg='#333333', fg='#999999', bd=0)
+    EntryTitle.grid(row=0, column=0, padx=50, pady=25, sticky='w')
+
 
 def TopBarPacking():
 
     NewCard = tk.Button(TopBar, text='New Card', bg='#303030', fg='#ffffff', bd=0, command=AddCard)
     NewCard.pack(padx=2, pady=2, side=tk.LEFT)
 
+
+def ChooseProfile():
+
+    MainWindow.destroy()
+
+    import MyCodes
 
 def MainView(argv1=1):
 
@@ -126,7 +136,7 @@ def MainView(argv1=1):
 
     IconFile = Image.open(data[2])
     IconImage = ImageTk.PhotoImage(IconFile.resize((60, 60), Image.ANTIALIAS))
-    ProfileButton = tk.Button(ProfileFrame, image=IconImage, bg='#303030', activebackground='#303030', bd=0)
+    ProfileButton = tk.Button(ProfileFrame, image=IconImage, bg='#303030', activebackground='#303030', bd=0, command=ChooseProfile)
     ProfileButton.image = IconImage
     ProfileButton.pack(side=tk.LEFT)
 
