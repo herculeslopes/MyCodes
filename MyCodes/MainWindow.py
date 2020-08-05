@@ -79,14 +79,17 @@ def OpenCode(iden):
 
     LabelFont = Font(size=30)
     TitleLabel = tk.Label(CentralSpace, text=CodeInfo[0], font=LabelFont, fg='#999999', bg='#121212')
-    TitleLabel.grid(row=0, column=0, padx=50, pady=25, sticky='w')
+    TitleLabel.pack(padx=50, pady=25, anchor='w')
+    # TitleLabel.grid(row=0, column=0, padx=50, pady=25, sticky='w')
 
-    TextFrame = tk.Frame(CentralSpace, bg='lightgreen', bd=5, width=500, height=500)
-    TextFrame.grid(row=1, column=0, padx=50, sticky='w')
+    TextFrame = tk.Frame(CentralSpace, bg='#333333', bd=0)
+    TextFrame.pack(padx=(50, 320), pady=(0, 145), anchor='w', fill=tk.BOTH, expand=True)
+    # TextFrame.grid(row=1, column=0, padx=50, sticky='w')
 
     TextFont = Font(family='Square721 BT', size=18)
-    TxtBox = tk.Message(TextFrame, text=CodeInfo[1], font=TextFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
-    TxtBox.pack(fill=tk.BOTH, expand=True)
+    TxtBox = tk.Message(TextFrame, text=CodeInfo[1], font=TextFont, bg='#333333', fg='#999999', width=9999, bd=0, padx=10, pady=10)
+    TxtBox.pack(side=tk.TOP, anchor='w')
+    # TxtBox.pack(fill=tk.BOTH, expand=True)
 
     # SaveButton = tk.Button(CentralSpace, text='Save Card', font='Default 15', bg='#333333', activebackground='#333333', fg='#999999', activeforeground='#999999', bd=0, command=lambda: SaveCard(iden))
     # SaveButton.grid(row=2, column=0, padx=50, pady=25, sticky='w')
@@ -120,14 +123,17 @@ def AddCard():
 
     EntryFont = Font(family='Square721 BT', size=30)
     EntryTitle = tk.Entry(CentralSpace, font=EntryFont, bg='#333333', fg='#999999', bd=0)
-    EntryTitle.grid(row=0, column=0, padx=50, pady=25, sticky='w')
+    EntryTitle.pack(padx=50, pady=25, anchor='w')
+    # EntryTitle.grid(row=0, column=0, padx=50, pady=25, sticky='w')
 
     TextFont = Font(family='Square721 BT', size=18)
     TextBox = tk.Text(CentralSpace, font=TextFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
-    TextBox.grid(row=1, column=0, padx=50)
+    TextBox.pack(padx=50, anchor='w')
+    # TextBox.grid(row=1, column=0, padx=50)
 
     SaveButton = tk.Button(CentralSpace, text='Save Card', font='Default 15', bg='#333333', activebackground='#333333', fg='#999999', activeforeground='#999999', bd=0, command=SaveCard)
-    SaveButton.grid(row=2, column=0, padx=50, pady=25, sticky='w')
+    SaveButton.pack(padx=50, pady=25, anchor='w')
+    # SaveButton.grid(row=2, column=0, padx=50, pady=25, sticky='w')
 
 
 def TopBarPacking():

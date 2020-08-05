@@ -4,8 +4,6 @@ from time import sleep
 from tkinter import filedialog
 import sqlite3
 
-# Teste de Atualização
-
 ProfileWindow = tk.Tk()
 ProfileWindow.title('MyCodes')
 ProfileWindow.geometry('950x500')
