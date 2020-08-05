@@ -105,7 +105,10 @@ def SearchImage():
     global FilePath
 
     FilePath = filedialog.askopenfilename(initialdir='/', title='Select A File', filetypes=(("PNG", "*.png"), ("JPEG", "*.jpg"), ("All Files", "*.*")))
-    ChangeImage(FilePath)
+
+    if FilePath != '':
+
+        ChangeImage(FilePath)
 
 
 def ChangeImage(path='Icons/template.png'):
@@ -139,7 +142,9 @@ def ChangeImage(path='Icons/template.png'):
 
 
 def SignUp(event=None):
-    global PasswordGiven
+    global PasswordGiven, FilePath
+
+    FilePath = 'Icons/default.png'
 
     PasswordGiven1 = PasswordSignUp1.get()
     PasswordGiven2 = PasswordSignUp2.get()
@@ -163,9 +168,7 @@ def SignUp(event=None):
 
 
 def AddProfile_Password(event=None):
-    global PasswordSignUp1, PasswordSignUp2, UsernameGiven
-
-    UsernameGiven = UsernameSignUp.get()
+    global PasswordSignUp1, PasswordSignUp2
 
     CleanScreen()
 
@@ -192,6 +195,17 @@ def AddProfile_Password(event=None):
     ProfileWindow.bind('<Return>', SignUp)
 
 
+def CheckUsername(event=None):
+
+    global UsernameGiven
+
+    UsernameGiven = UsernameSignUp.get()
+
+    if UsernameGiven != '':
+
+        AddProfile_Password()
+
+
 def AddProfile_Username():
     global UsernameSignUp, ImageFile
 
@@ -211,11 +225,11 @@ def AddProfile_Username():
     UsernameSignUp.pack(ipady=7, ipadx=70, pady=5)
 
     SubmitImage = ImageTk.PhotoImage(Image.open('Icons/submit.png'))
-    SubmitButton = tk.Button(ProfileWindow, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=AddProfile_Password)
+    SubmitButton = tk.Button(ProfileWindow, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=CheckUsername)
     SubmitButton.image = SubmitImage
     SubmitButton.pack(pady=5)
 
-    ProfileWindow.bind('<Return>', AddProfile_Password)
+    ProfileWindow.bind('<Return>', CheckUsername)
 
 
 def Submit(Button_id):
@@ -293,14 +307,22 @@ def ChooseProfile():
         for Profile in range(1, ProfileCounter + 1):
 
             DB_Cursor.execute(f'''SELECT id, imagepath FROM Profile
-            where id = {Profile}''')
+            WHERE id = {Profile}''')
 
             data = DB_Cursor.fetchone()
             Button_id = data[0]
             FilePath1 = data[1]
 
             ImageFile = Image.open(FilePath1)
-            ProfileImage = ImageTk.PhotoImage(ImageFile.resize((250, 250), Image.ANTIALIAS))
+
+            if FilePath1 == 'Icons/default.png':
+
+                ProfileImage = ImageTk.PhotoImage(ImageFile)
+
+            else:
+
+                ProfileImage = ImageTk.PhotoImage(ImageFile.resize((250, 250), Image.ANTIALIAS))
+
             ProfileButton = tk.Button(ProfileFrame, image=ProfileImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=lambda a = Button_id: Login(a))
             ProfileButton.image = ProfileImage
             ProfileButton.pack(side=tk.LEFT, padx=10)
