@@ -103,7 +103,7 @@ def CodeList():
 
     if CodeCounter != 0:
 
-        for code in range(1, CodeCounter + 1):
+        for code in range(1, CodeCounter + 1):  
 
             DB_Cursor.execute(f'''SELECT title FROM CodeList_{data[3]} WHERE id = {code}''')
             title = DB_Cursor.fetchone()[0]
@@ -132,7 +132,9 @@ def AddCard():
 
 def TopBarPacking():
 
-    NewCard = tk.Button(TopBar, text='New Card', bg='#303030', fg='#ffffff', bd=0, command=AddCard)
+    MenuText = Font(family='Arial')
+
+    NewCard = tk.Button(TopBar, text='New Card', font=MenuText, bg='#303030', fg='#ffffff', bd=0, command=AddCard)
     NewCard.pack(padx=2, pady=2, side=tk.LEFT)
 
 

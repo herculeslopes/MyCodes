@@ -105,6 +105,7 @@ def SearchImage():
     global FilePath
 
     FilePath = filedialog.askopenfilename(initialdir='/', title='Select A File', filetypes=(("PNG", "*.png"), ("JPEG", "*.jpg"), ("All Files", "*.*")))
+    print(FilePath)
 
     if FilePath != '':
 
@@ -247,7 +248,7 @@ def Submit(Button_id):
         ProfileWindow.destroy()
 
         # system(f'python MainWindow.py {Button_id}')
-        system(f'python MainWindow.py {data[0]} {data[1]} {data[2]} {Button_id}')
+        system(f'''python MainWindow.py "{data[0]}" "{data[1]}" "{data[2]}" {Button_id}''')
 
     else:
 
