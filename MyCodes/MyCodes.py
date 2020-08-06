@@ -231,6 +231,55 @@ def AddProfile_Username():
     ProfileWindow.bind('<Return>', CheckUsername)
 
 
+def EditProfile():
+
+    CleanScreen()
+
+    TopFrame = tk.Frame(ProfileWindow, bg='#121212')
+    TopFrame.pack(side=tk.LEFT, anchor='w', padx=10, pady=10)
+
+    IconButton = tk.Button(TopFrame, image=IconImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=ChooseProfile)
+    IconButton.pack(side=tk.LEFT)
+    # IconButton.pack(side=tk.TOP, anchor='nw', padx=10, pady=10)
+
+    Atributes = tk.Frame(ProfileWindow, bg='#121212', bd=0)
+    Atributes.pack(side=tk.RIGHT, fill=tk.Y)
+
+    UserLabel = tk.Label(Atributes, text='New Username', font='Arial 20', bg='#121212', fg='#999999')
+    UserLabel.pack(side=tk.TOP, anchor='w', padx=10, pady=5)
+
+    NewUsername = tk.Entry(Atributes, font='Default 20', bg='#333333', fg='#999999', bd=0)
+    NewUsername.pack(side=tk.TOP, ipady=5, ipadx=70, padx=10, pady=5)
+
+    PasswordLabel = tk.Label(Atributes, text='New Password', font='Arial 20', bg='#121212', fg='#999999')
+    PasswordLabel.pack(side=tk.TOP, anchor='w', padx=10, pady=(20, 5))
+
+    NewPassword = tk.Entry(Atributes, font='Default 20', bg='#333333', fg='#999999', bd=0)
+    NewPassword.pack(side=tk.TOP, ipady=5, ipadx=70, padx=10, pady=5)
+
+    ConfNewPassword = tk.Entry(Atributes, font='Default 20', bg='#333333', fg='#999999', bd=0)
+    ConfNewPassword.pack(side=tk.TOP, ipady=5, ipadx=70, padx=10, pady=5)
+
+    CurrentLabel = tk.Label(Atributes, text='Current Password', font='Arail 20', bg='#121212', fg='#999999')
+    CurrentLabel.pack(side=tk.TOP, anchor='w', padx=10, pady=(20, 5))
+
+    Password = tk.Entry(Atributes, font='Default 20', bg='#333333', fg='#999999', bd=0)
+    Password.pack(side=tk.TOP, ipady=5, ipadx=70, padx=10, pady=(5, 0))
+
+    Options = tk.Frame(Atributes)
+    Options.pack(side=tk.BOTTOM, padx=10, expand=True)
+
+    TrashFile = Image.open('Icons/trash.png')
+    TrashImage = ImageTk.PhotoImage(TrashFile)
+    TrashButton = tk.Button(Options, image=TrashImage, bg='#121212', activebackground='#121212', bd=0)
+    TrashButton.image = TrashImage
+    TrashButton.pack()
+
+    '''UsernameLabel = tk.Label(TopFrame, text=Username, font='Arial 40', bg='#121212')
+    UsernameLabel.pack(side=tk.LEFT, anchor='e')
+    # UsernameLabel.pack(side=tk.TOP, anchor='ne')'''
+
+
 def Submit(Button_id):
 
     from os import system
@@ -254,19 +303,30 @@ def Submit(Button_id):
 
 
 def Login(Button_id):
-    global PasswordEntry
+    global PasswordEntry, IconImage, Username
 
     CleanScreen()
 
     DB_Cursor.execute(f'''SELECT imagepath, username FROM Profile WHERE id = {Button_id}''')
     data = DB_Cursor.fetchone()
 
+    MiniMenu = tk.Frame(ProfileWindow, bg='#121212', bd=0)
+    MiniMenu.pack(side=tk.TOP, anchor='w', padx=10, pady=10)
+
     ImageFile = Image.open(data[0])
     IconFile = ImageFile.resize((75, 75), Image.ANTIALIAS)
     IconImage = ImageTk.PhotoImage(IconFile)
-    IconButton = tk.Button(ProfileWindow, image=IconImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=ChooseProfile)
+    IconButton = tk.Button(MiniMenu, image=IconImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=ChooseProfile)
     IconButton.image = IconImage
-    IconButton.pack(side=tk.TOP, anchor='w', padx=10, pady=10)
+    IconButton.pack(side=tk.LEFT)
+    # IconButton.pack(side=tk.TOP, anchor='w', padx=10, pady=10)
+
+    EditFile = Image.open('Icons/edit.png')
+    EditImage = ImageTk.PhotoImage(EditFile)
+    EditButton = tk.Button(MiniMenu, image=EditImage, bg='#121212', activebackground='#121212', bd=0, command=EditProfile)
+    EditButton.image = EditImage 
+    EditButton.pack(side=tk.RIGHT, padx=5)
+    # EditButton.pack(side=tk.TOP, anchor='nw', pady=10)
 
     # GetAccount()
 

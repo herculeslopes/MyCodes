@@ -55,7 +55,7 @@ def SaveCard():
 
     Title = EntryTitle.get()
     Text = TextBox.get('1.0', tk.END)
-    print(f'Title: {Title}\nText: {Text}')
+    # print(f'Title: {Title}\nText: {Text}')
 
     DB_Cursor.execute(f'''INSERT INTO CodeList_{data[3]} (title, txt) VALUES (?, ?)''', (Title, Text))
 
@@ -166,7 +166,7 @@ def MainView(argv1=1):
     CentralSpace.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
     ProfileBar = tk.Frame(SideBar, height=70, width=250, bg='#303030', bd=0)
-    ProfileBar.pack(side=tk.TOP, fill=tk.X)
+    ProfileBar.pack(side=tk.TOP, fill=tk.X, pady=(0, 10))
     ProfileBar.pack_propagate(0)
 
     ProfileFrame = tk.Frame(ProfileBar, bg='#303030')
