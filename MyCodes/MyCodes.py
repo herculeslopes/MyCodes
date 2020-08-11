@@ -14,6 +14,10 @@ class MainProgram():
 
         self.ChooseProfile()
 
+    
+    def CreateImage(self, ):
+
+
 
     def ChooseProfile(self):
         self.CleanMainWindow()
@@ -53,7 +57,7 @@ class MainProgram():
         elif ProfileCounter < 3:
 
             AddImage = ImageTk.PhotoImage(Image.open('Icons/add.png'))
-            AddButton = tk.Button(ProfileFrame, image=AddImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=self.AddProfile_Username)
+            AddButton = tk.Button(ProfileFrame, image=AddImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=self.CreateProfile)
             AddButton.image = AddImage
             AddButton.pack(side=tk.RIGHT, padx=5)    
 
@@ -80,8 +84,29 @@ class MainProgram():
         self.MyCodesDB.close()
 
 
-    def AddProfile_Username(self):
+    def CreateProfile(self):
         pass
+
+
+    def Login(self):
+        self.CleanMainWindow()
+
+        self.DB_Cursor.execute(f'''SELECT imagepath, username FROM Profile WHERE id = {Button_id}''')
+        data = self.DB_Cursor.fetchone()
+
+        UpFrame = tk.Frame(self.root, bg='#121212', bd=0)
+        UpFrame.pack(side=tk.TOP, anchor='w', padx=10, pady=10)
+
+        ImageFile = Image.open(data[0])
+        IconFile = ImageFile.resize((75, 75), Image.ANTIALIAS)
+        IconImage = ImageTk.PhotoImage(IconFile)
+        IconButton = tk.Button(UpFrame, image=IconImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=ChooseProfile)
+        IconButton.image = IconImage
+        IconButton.pack(side=tk.LEFT)
+
+        EditImage = self.CreateImage()
+
+
 
 def Main():
     root = tk.Tk()
