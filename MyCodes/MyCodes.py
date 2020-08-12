@@ -13,7 +13,8 @@ class MainProgram():
         self.root.resizable(False, False)
         self.root.configure(background='#121212')
 
-        self.LabelFont = Font(family='Arial', size=30)
+        self.LabelFont = Font(size=30)
+        self.EntryFont = Font(size=20)
 
         self.ChooseProfile()
 
@@ -60,7 +61,7 @@ class MainProgram():
                 ProfileButton.image = ProfileImage
                 ProfileButton.pack(side=tk.LEFT, padx=10)
         
-        elif ProfileCounter < 3:
+        if ProfileCounter < 3:
 
             AddImage = ImageTk.PhotoImage(Image.open('Icons/add.png'))
             AddButton = tk.Button(ProfileFrame, image=AddImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=self.CreateProfile)
@@ -91,12 +92,178 @@ class MainProgram():
 
 
     def CreateProfile(self):
-        def AddUsername():
+        self.CleanMainWindow()
+
+        def SaveProfile():
+            self.ConnectToDB()
+
+            self.DB_Cursor.execute('''
+            INSERT INTO Profile (username, password, imagepath) VALUES (?, ?, ?)
+            ''', (Username, Password, FilePath))
+
+            self.CloseConnectionToDB()
+
+            self.ChooseProfile()
+
+        def ProfileStatus():
             self.CleanMainWindow()
 
-            
+            WelcomeLabel = tk.Label(self.root, text='WELCOME', font=self.LabelFont, bg='#121212', fg='#808080')
+            WelcomeLabel.pack(pady=20)
 
-        pass
+            StatusFrame = tk.Frame(self.root, bg='#121212', bd=0)
+            StatusFrame.pack(pady=20)
+
+            ProfileLabel = tk.Label(StatusFrame, image=ToChangeImage, bg='#121212', bd=0, relief=tk.FLAT)
+            ProfileLabel.pack(side=tk.LEFT, padx=30)
+
+            LabelFrame = tk.Frame(StatusFrame, bg='#121212', bd=0)
+            LabelFrame.pack(side=tk.RIGHT)
+
+            UsernameLabel = tk.Label(LabelFrame, text=Username, font=self.LabelFont, bg='#121212', fg='#808080')
+            UsernameLabel.grid(sticky='w')
+
+            PasswordLabel = tk.Label(LabelFrame, text='•' * len(Password), font='OpenSans 30', bg='#121212', fg='#808080')
+            PasswordLabel.grid(sticky='w')
+
+            Options = tk.Frame(self.root, bg='#121212', bd=0)
+            Options.pack(side=tk.BOTTOM, pady=(0, 40))
+
+            SaveImage = self.CreateImage('Icons/save.png')
+            SaveButton = tk.Button(Options, image=SaveImage, bg='#121212', activebackground='#121212', bd=0, command=SaveProfile)
+            SaveButton.image = SaveImage
+            SaveButton.pack(side=tk.RIGHT, padx=10)
+
+            DiscartImage = self.CreateImage('Icons/discart.png')
+            DiscartButton = tk.Button(Options, image=DiscartImage, bg='#121212', activebackground='#121212',bd=0, command=self.ChooseProfile)
+            DiscartButton.image = DiscartImage
+            DiscartButton.pack(side=tk.LEFT, padx=10)
+
+
+        def AddImage(path='Icons/template.png'):
+            global ToChangeImage
+
+            def SearchImage():
+                global FilePath
+
+                FilePath = filedialog.askopenfilename(initialdir='/', title='Select A File', filetypes=(("PNG", "*.png"), ("JPEG", "*.jpg"), ("All Files", "*.*")))
+                
+                if FilePath != '':
+                    AddImage(FilePath)
+
+
+            self.CleanMainWindow()
+
+            TitleLabel = tk.Label(self.root, text='Choose You Own Image', font=self.LabelFont, bg='#121212', fg='#808080')
+            TitleLabel.pack(pady=20)
+
+            MainFrame = tk.Frame(self.root, bg='#121212', bd=0)
+            MainFrame.pack(pady=20)
+
+            DefaultImage = self.CreateImage('Icons/default.png')
+            DefaultLabel = tk.Label(MainFrame, image=DefaultImage, bg='#121212', bd=0)
+            DefaultLabel.image = DefaultImage
+            DefaultLabel.pack(side=tk.LEFT, padx=30)
+
+            LineImage = self.CreateImage('Icons/line.png')
+            LineLabel = tk.Label(MainFrame, image=LineImage, bg='#121212')
+            LineLabel.image = LineImage
+            LineLabel.pack(side=tk.LEFT)
+
+            ToChangeImage = ImageTk.PhotoImage(Image.open(path).resize((250, 250), Image.ANTIALIAS))
+            ChangeImageButton = tk.Button(MainFrame, image=ToChangeImage, bg='#121212', activebackground='#121212', bd=0, command=SearchImage)
+            ChangeImageButton.image = ToChangeImage
+            ChangeImageButton.pack(side=tk.RIGHT, padx=30)
+
+            SubmitImage = self.CreateImage('Icons/submit.png')
+            SubmitButton = tk.Button(self.root, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=ProfileStatus)
+            SubmitButton.image = SubmitImage
+            SubmitButton.pack(side=tk.BOTTOM, pady=(0, 50))
+
+        def AddPassword():
+            self.CleanMainWindow()
+
+            def CheckPassword(event=None):
+                global Password
+
+                PasswordGiven1 = PasswordSignUp1.get()
+                PasswordGiven2 = PasswordSignUp2.get()
+
+                if PasswordGiven1 == '' and PasswordGiven2 == '':
+
+                    PasswordSignUp1.delete(0, tk.END)
+                    PasswordSignUp2.delete(0, tk.END)
+
+                elif PasswordGiven1 != PasswordGiven2:
+
+                    PasswordSignUp1.delete(0, tk.END)
+                    PasswordSignUp2.delete(0, tk.END)
+
+                elif PasswordGiven1 == PasswordGiven2:
+
+                    Password = PasswordGiven1
+
+                    AddImage()
+
+
+            ImageFile = Image.open('Icons/default.png')
+            IconFile = ImageFile.resize((75, 80), Image.ANTIALIAS)
+            IconImage = ImageTk.PhotoImage(IconFile)
+            IconButton = tk.Button(self.root, image=IconImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=self.ChooseProfile)
+            IconButton.image = IconImage
+            IconButton.pack(side=tk.TOP, anchor='w', padx=10, pady=10)
+
+            PasswordLabel = tk.Label(self.root, text='Password: ', font='OpenSans 30', bg='#121212', fg='#808080')
+            PasswordLabel.pack(pady=(20, 5))
+
+            PasswordSignUp1 = tk.Entry(self.root, font='OpenSans 20', bg='#333333', fg='#999999', bd=0, justify=tk.CENTER, show='•')
+            PasswordSignUp1.pack(ipady=7, ipadx=70, pady=5) 
+
+            PasswordSignUp2 = tk.Entry(self.root, font='OpenSans 20', bg='#333333', fg='#999999', bd=0, justify=tk.CENTER, show='•')
+            PasswordSignUp2.pack(ipady=7, ipadx=70, pady=5) 
+
+            SubmitImage = self.CreateImage('Icons/submit.png')
+            SubmitButton = tk.Button(self.root, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=CheckPassword)
+            SubmitButton.image = SubmitImage
+            SubmitButton.pack(pady=5)
+
+            self.root.bind('<Return>', CheckPassword)
+
+
+        def AddUsername():
+            def CheckUsername(event=None):
+                global Username
+
+                Username = UsernameSignUp.get()
+
+                if Username != '':
+                    AddPassword()
+
+
+            self.CleanMainWindow()
+
+            ImageFile = Image.open('Icons/default.png')
+            IconFile = ImageFile.resize((75, 80), Image.ANTIALIAS)
+            IconImage = ImageTk.PhotoImage(IconFile)
+            IconButton = tk.Button(self.root, image=IconImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=self.ChooseProfile)
+            IconButton.image = IconImage
+            IconButton.pack(side=tk.TOP, anchor='w', padx=10, pady=10)
+
+            UsernameLabel = tk.Label(self.root, text='Username:', font=self.LabelFont, bg='#121212', fg='#808080')
+            UsernameLabel.pack(pady=(30, 5))
+
+            UsernameSignUp = tk.Entry(self.root, font=self.EntryFont, bg='#333333', fg='#999999', bd=0, justify=tk.CENTER)
+            UsernameSignUp.pack(ipady=7, ipadx=70, pady=5)
+
+            SubmitImage = self.CreateImage('Icons/submit.png')
+            SubmitButton = tk.Button(self.root, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=CheckUsername)
+            SubmitButton.image = SubmitImage
+            SubmitButton.pack(pady=5)
+
+            self.root.bind('<Return>', CheckUsername)
+
+
+        AddUsername()
 
 
     def Login(self, Button_id):
