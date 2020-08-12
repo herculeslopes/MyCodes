@@ -1,11 +1,10 @@
 import tkinter as tk
 from PIL import ImageTk, Image
-from time import sleep
 from tkinter import filedialog
 from tkinter.font import Font
 import sqlite3
 
-class MainProgram():
+class InitialWindow():
     def __init__(self, master):
         self.root = master
         self.root.title('MyCodes')
@@ -49,7 +48,7 @@ class MainProgram():
 
                 ImageFile = Image.open(ProfileImagePath)
 
-                if ProfileImagePath == 'Icons/default.png':
+                if ProfileImagePath == 'Images/Icons/default.png':
 
                     ProfileImage = ImageTk.PhotoImage(ImageFile)
 
@@ -63,7 +62,7 @@ class MainProgram():
         
         if ProfileCounter < 3:
 
-            AddImage = ImageTk.PhotoImage(Image.open('Icons/add.png'))
+            AddImage = ImageTk.PhotoImage(Image.open('Images/Buttons/add.png'))
             AddButton = tk.Button(ProfileFrame, image=AddImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=self.CreateProfile)
             AddButton.image = AddImage
             AddButton.pack(side=tk.RIGHT, padx=5)    
@@ -78,11 +77,14 @@ class MainProgram():
         self.MyCodesDB = sqlite3.connect('MyCodesDB.db')
         self.DB_Cursor = self.MyCodesDB.cursor()
 
-        self.DB_Cursor.execute('''CREATE TABLE IF NOT EXISTS Profile (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
-        password TEXT,
-        imagepath TEXT DEFAULT "Icons/default.png")''')
+        self.DB_Cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Profile (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            password TEXT,
+            imagepath TEXT DEFAULT "Images/Buttons/default.png"
+        )
+        ''')
 
 
     def CloseConnectionToDB(self):
@@ -129,18 +131,18 @@ class MainProgram():
             Options = tk.Frame(self.root, bg='#121212', bd=0)
             Options.pack(side=tk.BOTTOM, pady=(0, 40))
 
-            SaveImage = self.CreateImage('Icons/save.png')
+            SaveImage = self.CreateImage('Images/Buttons/save.png')
             SaveButton = tk.Button(Options, image=SaveImage, bg='#121212', activebackground='#121212', bd=0, command=SaveProfile)
             SaveButton.image = SaveImage
             SaveButton.pack(side=tk.RIGHT, padx=10)
 
-            DiscartImage = self.CreateImage('Icons/discart.png')
+            DiscartImage = self.CreateImage('Images/Buttons/discart.png')
             DiscartButton = tk.Button(Options, image=DiscartImage, bg='#121212', activebackground='#121212',bd=0, command=self.ChooseProfile)
             DiscartButton.image = DiscartImage
             DiscartButton.pack(side=tk.LEFT, padx=10)
 
 
-        def AddImage(path='Icons/template.png'):
+        def AddImage(path='Images/Icons/template.png'):
             global ToChangeImage
 
             def SearchImage():
@@ -160,12 +162,12 @@ class MainProgram():
             MainFrame = tk.Frame(self.root, bg='#121212', bd=0)
             MainFrame.pack(pady=20)
 
-            DefaultImage = self.CreateImage('Icons/default.png')
+            DefaultImage = self.CreateImage('Images/Icons/default.png')
             DefaultLabel = tk.Label(MainFrame, image=DefaultImage, bg='#121212', bd=0)
             DefaultLabel.image = DefaultImage
             DefaultLabel.pack(side=tk.LEFT, padx=30)
 
-            LineImage = self.CreateImage('Icons/line.png')
+            LineImage = self.CreateImage('Images/Icons/line.png')
             LineLabel = tk.Label(MainFrame, image=LineImage, bg='#121212')
             LineLabel.image = LineImage
             LineLabel.pack(side=tk.LEFT)
@@ -175,7 +177,7 @@ class MainProgram():
             ChangeImageButton.image = ToChangeImage
             ChangeImageButton.pack(side=tk.RIGHT, padx=30)
 
-            SubmitImage = self.CreateImage('Icons/submit.png')
+            SubmitImage = self.CreateImage('Images/Buttons/submit.png')
             SubmitButton = tk.Button(self.root, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=ProfileStatus)
             SubmitButton.image = SubmitImage
             SubmitButton.pack(side=tk.BOTTOM, pady=(0, 50))
@@ -206,7 +208,7 @@ class MainProgram():
                     AddImage()
 
 
-            ImageFile = Image.open('Icons/default.png')
+            ImageFile = Image.open('Images/Icons/default.png')
             IconFile = ImageFile.resize((75, 80), Image.ANTIALIAS)
             IconImage = ImageTk.PhotoImage(IconFile)
             IconButton = tk.Button(self.root, image=IconImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=self.ChooseProfile)
@@ -222,7 +224,7 @@ class MainProgram():
             PasswordSignUp2 = tk.Entry(self.root, font='OpenSans 20', bg='#333333', fg='#999999', bd=0, justify=tk.CENTER, show='•')
             PasswordSignUp2.pack(ipady=7, ipadx=70, pady=5) 
 
-            SubmitImage = self.CreateImage('Icons/submit.png')
+            SubmitImage = self.CreateImage('Images/Buttons/submit.png')
             SubmitButton = tk.Button(self.root, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=CheckPassword)
             SubmitButton.image = SubmitImage
             SubmitButton.pack(pady=5)
@@ -242,7 +244,7 @@ class MainProgram():
 
             self.CleanMainWindow()
 
-            ImageFile = Image.open('Icons/default.png')
+            ImageFile = Image.open('Images/Icons/default.png')
             IconFile = ImageFile.resize((75, 80), Image.ANTIALIAS)
             IconImage = ImageTk.PhotoImage(IconFile)
             IconButton = tk.Button(self.root, image=IconImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=self.ChooseProfile)
@@ -255,7 +257,7 @@ class MainProgram():
             UsernameSignUp = tk.Entry(self.root, font=self.EntryFont, bg='#333333', fg='#999999', bd=0, justify=tk.CENTER)
             UsernameSignUp.pack(ipady=7, ipadx=70, pady=5)
 
-            SubmitImage = self.CreateImage('Icons/submit.png')
+            SubmitImage = self.CreateImage('Images/Buttons/submit.png')
             SubmitButton = tk.Button(self.root, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=CheckUsername)
             SubmitButton.image = SubmitImage
             SubmitButton.pack(pady=5)
@@ -282,7 +284,7 @@ class MainProgram():
         IconButton.image = IconImage
         IconButton.pack(side=tk.LEFT)
 
-        EditImage = self.CreateImage('Icons/edit.png')
+        EditImage = self.CreateImage('Images/Buttons/edit.png')
         EditButton = tk.Button(UpFrame, image=EditImage, bg='#121212', activebackground='#121212', bd=0, command=self.EditProfile)
         EditButton.image = EditImage
         EditButton.pack(side=tk.RIGHT, padx=5)
@@ -313,7 +315,7 @@ class MainProgram():
                 PasswordEntry.delete(0, tk.END)
 
 
-        SubmitImage = self.CreateImage('Icons/submit.png')
+        SubmitImage = self.CreateImage('Images/Buttons/submit.png')
         SubmitButton = tk.Button(self.root, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=lambda: Submit(Button_id))
         SubmitButton.image = SubmitImage
         SubmitButton.pack(pady=5)
@@ -328,7 +330,7 @@ class MainProgram():
 
 def Main():
     root = tk.Tk()
-    MainProgram(root)
+    InitialWindow(root)
     root.mainloop()
 
 
