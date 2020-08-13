@@ -13,6 +13,9 @@ class MainProgram():
         self.root.state('zoomed')
         self.root.configure(background='#121212')
 
+        self.EntryFont = Font(family='Square721 BT', size=30)
+        self.TextFont = Font(family='Square721 BT', size=18)
+
         self.MainView()
 
 
@@ -22,6 +25,11 @@ class MainProgram():
         self.root.destroy()
 
         system(f'''python MyCodes.py''')
+
+    
+    def CleanCentralSpace(self):
+        for widget in self.CentralSpace.winfo_children():
+            widget.destroy()
 
 
     def CreateImage(self, path):
@@ -51,8 +59,19 @@ class MainProgram():
         self.MyCodesDB.close()
 
 
-    def AddCard(self):
-        pass
+    def SaveCard(self):
+        self.ConnectToDB()
+
+        Title = self.TitleEntry.get()
+        Text = self.TextBox.get('1.0', tk.END)
+
+        self.DB_Cursor.execute(f'''INSERT INTO CodeList_{Data[3]} (title, txt) VALUES (?, ?)''', (Title, Text))
+
+        self.CloseConnectionToDB()
+        
+        self.CleanCentralSpace()
+
+        self.PackCodeList()
 
 
     def MainView(self):
@@ -65,13 +84,27 @@ class MainProgram():
         TopBar.pack(side=tk.TOP, fill=tk.X)
 
         def PackTopBar():
-            NewCard = tk.Button(TopBar, text='New', bg='#303030', activebackground='#999999', fg='#ffffff', bd=0, command=self.AddCard)
+            def AddCard():
+                self.CleanCentralSpace()
+                EntryFont = Font(family='Square721 BT', size=30)
+
+                self.TitleEntry = tk.Entry(self.CentralSpace, font=EntryFont, bg='#333333', fg='#999999', bd=0)
+                self.TitleEntry.pack(padx=50, pady=25, anchor='w')
+        
+                self.TextBox = tk.Text(self.CentralSpace, font=self.TextFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
+                self.TextBox.pack(padx=50, anchor='w')
+
+                SaveButton = tk.Button(self.CentralSpace, text='Save Card', font='Default 15', bg='#333333', activebackground='#333333', fg='#999999', activeforeground='#999999', bd=0, command=self.SaveCard)
+                SaveButton.pack(padx=50, pady=25, anchor='w')
+
+
+            NewCard = tk.Button(TopBar, text='New', bg='#303030', activebackground='#999999', fg='#ffffff', bd=0, command=AddCard)
             NewCard.pack(padx=2, pady=2, side=tk.LEFT)
 
         PackTopBar()
 
-        CentralSpace = tk.Frame(self.root, bg='#121212', bd=0)
-        CentralSpace.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        self.CentralSpace = tk.Frame(self.root, bg='#121212', bd=0)
+        self.CentralSpace.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
         ProfileBar = tk.Frame(SideBar, height=70, width=250, bg='#303030', bd=0)
         ProfileBar.pack(side=tk.TOP, fill=tk.X, pady=(0, 10))
@@ -105,8 +138,25 @@ class MainProgram():
 
         ClearList()
 
-        def OpenCode():
-            pass
+        def OpenCode(iden):
+            self.CleanCentralSpace()
+
+            self.ConnectToDB()
+            self.DB_Cursor.execute(f'''SELECT title, txt FROM CodeList_{Data[3]} WHERE id = {iden}''')
+            CodeInfo = self.DB_Cursor.fetchone()
+
+            TitleFont = Font(size=30)
+            TitleLabel = tk.Label(self.CentralSpace, text=CodeInfo[0], font=TitleFont, fg='#999999', bg='#121212')
+            TitleLabel.pack(padx=50, pady=25, anchor='w')
+            
+            TextFrame = tk.Frame(self.CentralSpace, bg='#333333', bd=0)
+            TextFrame.pack(padx=(50, 320), pady=(0, 145), anchor='w', fill=tk.BOTH, expand=True)
+
+            TextFont = Font(family='Square721 BT', size=18)
+            
+            TxtBox = tk.Message(TextFrame, text=CodeInfo[1], font=TextFont, bg='#333333', fg='#999999', width=9999, bd=0, padx=10, pady=10)
+            TxtBox.pack(side=tk.TOP, anchor='w')
+
 
         self.ConnectToDB()
 
