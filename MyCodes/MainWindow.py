@@ -16,6 +16,8 @@ class MainProgram():
         self.EntryFont = Font(family='Square721 BT', size=30)
         self.TextFont = Font(family='Square721 BT', size=18)
 
+        self.ActiveCard = None
+
         self.MainView()
 
 
@@ -73,6 +75,17 @@ class MainProgram():
 
         self.PackCodeList()
 
+    
+    def DeleteCard(self):
+        pass
+
+    def ResetId(self):
+        self.ConnectToDB() 
+
+        self.DB_Cursor.execute(f"""UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='CodeList_{Data[3]}'""")
+
+        self.CloseConnectionToDB()
+
 
     def MainView(self):
 
@@ -100,6 +113,25 @@ class MainProgram():
 
             NewCard = tk.Button(TopBar, text='New', bg='#303030', activebackground='#999999', fg='#ffffff', bd=0, command=AddCard)
             NewCard.pack(padx=2, pady=2, side=tk.LEFT)
+
+            def DeleteCard():
+                if self.ActiveCard == None:
+                    return
+
+                else:
+                    self.ConnectToDB()
+
+                    self.DB_Cursor.execute(f'''DELETE FROM CodeList_{Data[3]} WHERE id = {self.ActiveCard}''')
+                    self.CloseConnectionToDB()
+                    
+                    self.ResetId()
+
+                    self.CleanCentralSpace()
+                    self.PackCodeList()
+
+
+            DelCard = tk.Button(TopBar, text='Del', bg='#303030', activebackground='#999999', fg='#ffffff', bd=0, command=DeleteCard)
+            DelCard.pack(padx=2, pady=2, side=tk.LEFT)
 
         PackTopBar()
 
@@ -140,6 +172,8 @@ class MainProgram():
 
         def OpenCode(iden):
             self.CleanCentralSpace()
+
+            self.ActiveCard = iden
 
             self.ConnectToDB()
             self.DB_Cursor.execute(f'''SELECT title, txt FROM CodeList_{Data[3]} WHERE id = {iden}''')
