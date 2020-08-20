@@ -60,6 +60,25 @@ class MainProgram():
         self.DB_Cursor.close()
         self.MyCodesDB.close()
 
+    def DeleteTable(self):
+        self.DB_Cursor.execute(f'''DROP TABLE CodeList_{Data[3]}''')
+        self.CloseConnectionToDB()
+
+    def ResetDB(self):
+
+        self.ConnectToDB()
+
+        Select = self.DB_Cursor.execute(f'''SELECT * FROM CodeList_{Data[3]}''')
+        TableData = Select.fetchall()
+
+        self.DeleteTable()
+        self.ConnectToDB()
+
+        for i in range(0, len(TableData)):
+            self.DB_Cursor.execute(f'''INSERT INTO CodeList_{Data[3]} (title, txt) VALUES (?, ?)''', (TableData[i][1], TableData[i][2]))
+
+        self.CloseConnectionToDB()
+
 
     def SaveCard(self):
         self.ConnectToDB()
@@ -79,12 +98,12 @@ class MainProgram():
     def DeleteCard(self):
         pass
 
-    def ResetId(self):
+    '''def ResetId(self):
         self.ConnectToDB() 
 
         self.DB_Cursor.execute(f"""UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='CodeList_{Data[3]}'""")
 
-        self.CloseConnectionToDB()
+        self.CloseConnectionToDB()'''
 
 
     def MainView(self):
@@ -124,7 +143,7 @@ class MainProgram():
                     self.DB_Cursor.execute(f'''DELETE FROM CodeList_{Data[3]} WHERE id = {self.ActiveCard}''')
                     self.CloseConnectionToDB()
                     
-                    self.ResetId()
+                    self.ResetDB()
 
                     self.CleanCentralSpace()
                     self.PackCodeList()
