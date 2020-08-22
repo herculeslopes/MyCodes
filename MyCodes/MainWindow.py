@@ -116,15 +116,31 @@ class MainProgram():
         TopBar.pack(side=tk.TOP, fill=tk.X)
 
         def PackTopBar():
+            
+            # TODO: Build a 'Programming Language' Tab Frame
+
             def AddCard():
                 self.CleanCentralSpace()
                 EntryFont = Font(family='Square721 BT', size=30)
 
                 self.TitleEntry = tk.Entry(self.CentralSpace, font=EntryFont, bg='#333333', fg='#999999', bd=0)
                 self.TitleEntry.pack(padx=50, pady=25, anchor='w')
-        
-                self.TextBox = tk.Text(self.CentralSpace, font=self.TextFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
-                self.TextBox.pack(padx=50, anchor='w')
+
+                # TODO: Add Tabs To Text Box 
+
+                TextBoxFrame = tk.Frame(self.CentralSpace, bg='lightblue')
+                TextBoxFrame.pack(padx=50, anchor='w')
+
+                TextTabFrame = tk.Frame(TextBoxFrame, bg='#525252')
+                TextTabFrame.pack(side=tk.TOP, fill=tk.X)
+
+                NewTabImage = self.CreateImage(r'Images\Buttons\NewTab.png')
+                NewTabButton = tk.Button(TextTabFrame, image=NewTabImage, bg='#525252', activebackground='lightgreen', bd=0)
+                NewTabButton.image = NewTabImage
+                NewTabButton.pack(side=tk.LEFT)
+
+                self.TextBox = tk.Text(TextBoxFrame, font=self.TextFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
+                self.TextBox.pack(side=tk.BOTTOM)
 
                 SaveButton = tk.Button(self.CentralSpace, text='Save Card', font='Default 15', bg='#333333', activebackground='#333333', fg='#999999', activeforeground='#999999', bd=0, command=self.SaveCard)
                 SaveButton.pack(padx=50, pady=25, anchor='w')
@@ -151,6 +167,7 @@ class MainProgram():
 
             DelCard = tk.Button(TopBar, text='Del', bg='#303030', activebackground='#999999', fg='#ffffff', bd=0, command=DeleteCard)
             DelCard.pack(padx=2, pady=2, side=tk.LEFT)
+
 
         PackTopBar()
 

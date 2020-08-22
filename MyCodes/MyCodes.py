@@ -96,6 +96,7 @@ class InitialWindow():
     def CreateProfile(self):
         self.CleanMainWindow()
 
+
         def SaveProfile():
             self.ConnectToDB()
 
@@ -106,6 +107,7 @@ class InitialWindow():
             self.CloseConnectionToDB()
 
             self.ChooseProfile()
+
 
         def ProfileStatus():
             self.CleanMainWindow()
@@ -241,7 +243,6 @@ class InitialWindow():
                 if Username != '':
                     AddPassword()
 
-
             self.CleanMainWindow()
 
             ImageFile = Image.open('Images/Icons/default.png')
@@ -263,7 +264,6 @@ class InitialWindow():
             SubmitButton.pack(pady=5)
 
             self.root.bind('<Return>', CheckUsername)
-
 
         AddUsername()
 
@@ -314,12 +314,10 @@ class InitialWindow():
             else:
                 PasswordEntry.delete(0, tk.END)
 
-
         SubmitImage = self.CreateImage('Images/Buttons/submit.png')
         SubmitButton = tk.Button(self.root, image=SubmitImage, bg='#121212', activebackground='#121212', bd=0, relief=tk.FLAT, command=lambda: Submit(Button_id))
         SubmitButton.image = SubmitImage
         SubmitButton.pack(pady=5)
-
 
         self.root.bind('<Return>', lambda event: Submit(Button_id))
 
