@@ -131,11 +131,31 @@ class MainProgram():
                 TextBoxFrame = tk.Frame(self.CentralSpace, bg='lightblue')
                 TextBoxFrame.pack(padx=50, anchor='w')
 
-                TextTabFrame = tk.Frame(TextBoxFrame, bg='#525252')
+                TextTabFrame = tk.Frame(TextBoxFrame, bg='#121212') #525252
                 TextTabFrame.pack(side=tk.TOP, fill=tk.X)
 
+                TabList = []
+                TabCode = []
+                
+                def SwitchTab():
+                    TabCode.append(self.TextBox.get('1.0', tk.END))
+                    self.TextBox.delete('1.0', tk.END)
+                    print(TabCode)
+
+
+                def NewCodeTab(): 
+                    Tab = tk.Button(TabsFrame, text=str(1), bd=0, command=SwitchTab)
+                    TabList.append(Tab)
+                    Tab.pack(side=tk.LEFT, fill=tk.BOTH, padx=(0, 1))
+
+
+                TabsFrame = tk.Frame(TextTabFrame)
+                TabsFrame.pack(side=tk.LEFT)
+
+                NewCodeTab()
+
                 NewTabImage = self.CreateImage(r'Images\Buttons\NewTab.png')
-                NewTabButton = tk.Button(TextTabFrame, image=NewTabImage, bg='#525252', activebackground='lightgreen', bd=0)
+                NewTabButton = tk.Button(TextTabFrame, image=NewTabImage, bg='#121212', activebackground='#121212', bd=0, command=NewCodeTab)
                 NewTabButton.image = NewTabImage
                 NewTabButton.pack(side=tk.LEFT)
 
