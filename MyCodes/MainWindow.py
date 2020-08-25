@@ -135,18 +135,29 @@ class MainProgram():
                 TextTabFrame.pack(side=tk.TOP, fill=tk.X)
 
                 TabList = []
-                TabCode = []
+                TabCode = ['']
+
+                self.ActiveTab = len(TabCode) - 1
                 
-                def SwitchTab():
-                    TabCode.append(self.TextBox.get('1.0', tk.END))
+                def SwitchTab(iden):
+                    print(self.ActiveTab)
+
+                    TabList[iden].configure(background='#333333')
+                    TabCode[self.ActiveTab] = self.TextBox.get('1.0', tk.END)
+
                     self.TextBox.delete('1.0', tk.END)
-                    print(TabCode)
+
+                    self.ActiveTab = iden
+                    print(self.ActiveTab)
+                    TabList[iden].configure(background='#121212')
 
 
                 def NewCodeTab(): 
-                    Tab = tk.Button(TabsFrame, text=str(1), bd=0, command=SwitchTab)
-                    TabList.append(Tab)
+                    Tab = tk.Button(TabsFrame, text=str(len(TabCode)), bd=0, command=lambda iden = len(TabCode): SwitchTab(iden-1))
                     Tab.pack(side=tk.LEFT, fill=tk.BOTH, padx=(0, 1))
+                    TabCode.append('')
+                    TabList.append(Tab)
+                    
 
 
                 TabsFrame = tk.Frame(TextTabFrame)
