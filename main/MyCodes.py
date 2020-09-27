@@ -14,6 +14,7 @@ class InitialWindow():
 
         self.LabelFont = Font(size=30)
         self.EntryFont = Font(size=20)
+        self.WarningFont = Font(size=40)
 
         self.ChooseProfile()
 
@@ -324,7 +325,16 @@ class InitialWindow():
 
     def EditProfile(self):
         self.ClearMainWindow()
+
+        MainFrame = tk.Frame(self.root, bg='#121212')
+        MainFrame.pack(expand=True)
+
+        WarningLabel = tk.Label(MainFrame, text='Feature In Development', font=self.WarningFont, fg='#808080', bg='#121212')
+        WarningLabel.pack()
         
+        OkButton = tk.Button(MainFrame, text='ok', font=self.EntryFont, fg='#808080', bg='#333333', activebackground='#242424', bd=0)
+        OkButton['command'] = self.ChooseProfile
+        OkButton.pack()
         
 
 def Main():
