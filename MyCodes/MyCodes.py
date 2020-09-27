@@ -26,7 +26,7 @@ class InitialWindow():
 
 
     def ChooseProfile(self):
-        self.CleanMainWindow()
+        self.ClearMainWindow()
 
         ProfileFrame = tk.Frame(self.root, bg='#121212', bd=0)
         ProfileFrame.pack(expand=True)
@@ -68,7 +68,7 @@ class InitialWindow():
             AddButton.pack(side=tk.RIGHT, padx=5)    
 
 
-    def CleanMainWindow(self):
+    def ClearMainWindow(self):
         for widget in self.root.winfo_children():
             widget.destroy()
 
@@ -94,7 +94,7 @@ class InitialWindow():
 
 
     def CreateProfile(self):
-        self.CleanMainWindow()
+        self.ClearMainWindow()
 
 
         def SaveProfile():
@@ -110,7 +110,7 @@ class InitialWindow():
 
 
         def ProfileStatus():
-            self.CleanMainWindow()
+            self.ClearMainWindow()
 
             WelcomeLabel = tk.Label(self.root, text='WELCOME', font=self.LabelFont, bg='#121212', fg='#808080')
             WelcomeLabel.pack(pady=20)
@@ -156,7 +156,7 @@ class InitialWindow():
                     AddImage(FilePath)
 
 
-            self.CleanMainWindow()
+            self.ClearMainWindow()
 
             TitleLabel = tk.Label(self.root, text='Choose You Own Image', font=self.LabelFont, bg='#121212', fg='#808080')
             TitleLabel.pack(pady=20)
@@ -185,7 +185,7 @@ class InitialWindow():
             SubmitButton.pack(side=tk.BOTTOM, pady=(0, 50))
 
         def AddPassword():
-            self.CleanMainWindow()
+            self.ClearMainWindow()
 
             def CheckPassword(event=None):
                 global Password
@@ -243,7 +243,7 @@ class InitialWindow():
                 if Username != '':
                     AddPassword()
 
-            self.CleanMainWindow()
+            self.ClearMainWindow()
 
             ImageFile = Image.open('Images/Icons/default.png')
             IconFile = ImageFile.resize((75, 80), Image.ANTIALIAS)
@@ -269,7 +269,7 @@ class InitialWindow():
 
 
     def Login(self, Button_id):
-        self.CleanMainWindow()
+        self.ClearMainWindow()
 
         self.DB_Cursor.execute(f'''SELECT imagepath, username FROM Profile WHERE id = {Button_id}''')
         Data = self.DB_Cursor.fetchone()
@@ -323,8 +323,9 @@ class InitialWindow():
 
 
     def EditProfile(self):
-        pass
-
+        self.ClearMainWindow()
+        
+        
 
 def Main():
     root = tk.Tk()
