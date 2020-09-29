@@ -14,7 +14,7 @@ class MainProgram():
         self.root.configure(background='#121212')
 
         self.EntryFont = Font(family='Square721 BT', size=30)
-        self.TextFont = Font(family='Square721 BT', size=18)
+        self.CodeFont = Font(family='Consolas', size=18)
 
         self.ActiveCard = None
 
@@ -128,7 +128,8 @@ class MainProgram():
 
                 # TODO: Add Tabs To Text Box 
 
-                TextBoxFrame = tk.Frame(self.CentralSpace, bg='lightblue')
+                TextBoxFrame = tk.Frame(self.CentralSpace, bg='lightblue', height=800, width=1500)
+                TextBoxFrame.propagate(0)
                 TextBoxFrame.pack(padx=50, anchor='w')
 
                 TextTabFrame = tk.Frame(TextBoxFrame, bg='#121212') #525252
@@ -140,41 +141,47 @@ class MainProgram():
                 self.ActiveTab = len(TabCode) - 1
                 
                 def SwitchTab(iden):
-                    print(self.ActiveTab)
+                    print(f'Antigo {self.ActiveTab}')
 
-                    TabList[iden].configure(background='#333333')
+                    if self.ActiveTab != None:
+                        TabList[self.ActiveTab].configure(background='#242424')
+                        print(f'Mudando o antigo de cor: {self.ActiveTab}')
+
+                    # TabList[iden].configure(background='#242424') # 333333
                     TabCode[self.ActiveTab] = self.TextBox.get('1.0', tk.END)
 
                     self.TextBox.delete('1.0', tk.END)
 
                     self.ActiveTab = iden
-                    print(self.ActiveTab)
-                    TabList[iden].configure(background='#121212')
+                    print(f'Novo {self.ActiveTab}')
+                    TabList[iden].configure(background='#303030')
 
 
                 def NewCodeTab(): 
-                    Tab = tk.Button(TabsFrame, text=str(len(TabCode)), bd=0, command=lambda iden = len(TabCode): SwitchTab(iden-1))
+                    Tab = tk.Button(TabsFrame, text=str(len(TabCode)), bd=0, fg='#999999', bg='#242424', activebackground='#121212', activeforeground='#999999', command=lambda iden = len(TabCode): SwitchTab(iden-1))
                     Tab.pack(side=tk.LEFT, fill=tk.BOTH, padx=(0, 1))
                     TabCode.append('')
                     TabList.append(Tab)
-                    
+                    print(f'O que eu quero {len(TabCode)}')
+                    SwitchTab(len(TabCode) - 2)
 
-
-                TabsFrame = tk.Frame(TextTabFrame)
+                TabsFrame = tk.Frame(TextTabFrame, bg='#121212')
                 TabsFrame.pack(side=tk.LEFT)
-
-                NewCodeTab()
 
                 NewTabImage = self.CreateImage(r'Images\Buttons\NewTab.png')
                 NewTabButton = tk.Button(TextTabFrame, image=NewTabImage, bg='#121212', activebackground='#121212', bd=0, command=NewCodeTab)
                 NewTabButton.image = NewTabImage
                 NewTabButton.pack(side=tk.LEFT)
 
-                self.TextBox = tk.Text(TextBoxFrame, font=self.TextFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
-                self.TextBox.pack(side=tk.BOTTOM)
+                self.TextBox = tk.Text(TextBoxFrame, font=self.CodeFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
+                self.TextBox.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
 
                 SaveButton = tk.Button(self.CentralSpace, text='Save Card', font='Default 15', bg='#333333', activebackground='#333333', fg='#999999', activeforeground='#999999', bd=0, command=self.SaveCard)
                 SaveButton.pack(padx=50, pady=25, anchor='w')
+
+                NewCodeTab()
+
+
 
 
             NewCard = tk.Button(TopBar, text='New', bg='#303030', activebackground='#999999', fg='#ffffff', bd=0, command=AddCard)
@@ -253,7 +260,7 @@ class MainProgram():
             TextFrame = tk.Frame(self.CentralSpace, bg='#333333', bd=0)
             TextFrame.pack(padx=(50, 320), pady=(0, 145), anchor='w', fill=tk.BOTH, expand=True)
 
-            TextFont = Font(family='Square721 BT', size=18)
+            TextFont = Font(family='Arial', size=18) #Square721 BT
             
             TxtBox = tk.Message(TextFrame, text=CodeInfo[1], font=TextFont, bg='#333333', fg='#999999', width=9999, bd=0, padx=10, pady=10)
             TxtBox.pack(side=tk.TOP, anchor='w')
