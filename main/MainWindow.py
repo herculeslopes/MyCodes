@@ -49,7 +49,6 @@ class MainProgram():
         CREATE TABLE IF NOT EXISTS CodeList_{Data[3]} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT DEAFULT "Give It A Title",
-            txt TEXT,
             language TEXT
         )
         ''')
@@ -150,20 +149,39 @@ class MainProgram():
                     # TabList[iden].configure(background='#242424') # 333333
                     TabCode[self.ActiveTab] = self.TextBox.get('1.0', tk.END)
 
+                    self.DB_Cursor.execute(f'''INSERT INTO CodeList_{Data[3]} (code_{self.ActiveTab + 1}) VALUES (?)''', (TabCode[self.ActiveTab],))
+                    
                     self.TextBox.delete('1.0', tk.END)
+
+                    # Until This Point, The Code Is Working With The Previous Active Tab
 
                     self.ActiveTab = iden
                     print(f'Novo {self.ActiveTab}')
                     TabList[iden].configure(background='#303030')
 
+                    self.DB_Cursor.execute(f'SELECT code_{self.ActiveTab + 1} FROM CodeList_{Data[3]} ')
+
+                    code = self.DB_Cursor.fetchone()
+
+                    self.TextBox.insert('1.0', code)
+ 
 
                 def NewCodeTab(): 
                     Tab = tk.Button(TabsFrame, text=str(len(TabCode)), bd=0, fg='#999999', bg='#242424', activebackground='#121212', activeforeground='#999999', command=lambda iden = len(TabCode): SwitchTab(iden-1))
                     Tab.pack(side=tk.LEFT, fill=tk.BOTH, padx=(0, 1))
                     TabCode.append('')
                     TabList.append(Tab)
+
                     print(f'O que eu quero {len(TabCode)}')
+                    print('New Code Tab')
+                    print(f'len(TabCode) = {len(TabCode)}')
+                    print(f'CodeList_{Data[3]}')
+                    print(f'cod')
+
+                    self.DB_Cursor.execute(f'ALTER TABLE CodeList_{Data[3]} ADD code_{len(TabCode) - 1} TEXT')
                     SwitchTab(len(TabCode) - 2)
+
+
 
                 TabsFrame = tk.Frame(TextTabFrame, bg='#121212')
                 TabsFrame.pack(side=tk.LEFT)
@@ -250,7 +268,7 @@ class MainProgram():
             self.ActiveCard = iden
 
             self.ConnectToDB()
-            self.DB_Cursor.execute(f'''SELECT title, txt FROM CodeList_{Data[3]} WHERE id = {iden}''')
+            self.DB_Cursor.execute(f'''SELECT title, code_1 FROM CodeList_{Data[3]} WHERE id = {iden}''')
             CodeInfo = self.DB_Cursor.fetchone()
 
             TitleFont = Font(size=30)
