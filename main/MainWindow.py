@@ -83,9 +83,20 @@ class MainProgram():
         self.ConnectToDB()
 
         Title = self.TitleEntry.get()
-        Text = self.TextBox.get('1.0', tk.END)
 
-        self.DB_Cursor.execute(f'''INSERT INTO CodeList_{Data[3]} (title, txt) VALUES (?, ?)''', (Title, Text))
+        # self.DB_Cursor.execute(f'''INSERT INTO CodeList_{Data[3]} (title, txt) VALUES (?, ?)''', (Title, Text))
+
+        # TODO: Save Title   
+        self.DB_Cursor.execute(f'''INSERT INTO CodeList_{Data[3]} (title) VALUES (?)''', (Title,))
+
+        self.DB_Cursor.execute(f'''SELECT COUNT(*) FROM CodeList_{Data[3]}''')
+        
+        CardIndex = self.DB_Cursor.fetchone()[0]
+
+        # TODO: Save All Tabs
+        for index, code in enumerate(self.TabCode):
+            self.DB_Cursor.execute(f'''ALTER TABLE CodeList_{Data[3]} ADD code_{index + 1} TEXT''')
+            self.DB_Cursor.execute(f'''UPDATE CodeList_{Data[3]} SET (code_{index + 1}) = (?) WHERE id = {CardIndex}''', (code,))
 
         self.CloseConnectionToDB()
         
@@ -135,11 +146,12 @@ class MainProgram():
                 TextTabFrame.pack(side=tk.TOP, fill=tk.X)
 
                 TabList = []
-                TabCode = ['']
+                self.TabCode = []
 
-                self.ActiveTab = len(TabCode) - 1
+                self.ActiveTab = 0
                 
                 def SwitchTab(iden):
+                    print(f'iden = {iden}')
                     print(f'Antigo {self.ActiveTab}')
 
                     if self.ActiveTab != None:
@@ -147,9 +159,10 @@ class MainProgram():
                         print(f'Mudando o antigo de cor: {self.ActiveTab}')
 
                     # TabList[iden].configure(background='#242424') # 333333
-                    TabCode[self.ActiveTab] = self.TextBox.get('1.0', tk.END)
+                    self.TabCode[self.ActiveTab] = self.TextBox.get('1.0', tk.END)
+                    print(f'Previous Code: {self.TabCode[self.ActiveTab]}')
 
-                    self.DB_Cursor.execute(f'''INSERT INTO CodeList_{Data[3]} (code_{self.ActiveTab + 1}) VALUES (?)''', (TabCode[self.ActiveTab],))
+                    # self.DB_Cursor.execute(f'''INSERT INTO CodeList_{Data[3]} (code_{self.ActiveTab + 1}) VALUES (?)''', (self.TabCode[self.ActiveTab],))
                     
                     self.TextBox.delete('1.0', tk.END)
 
@@ -159,27 +172,31 @@ class MainProgram():
                     print(f'Novo {self.ActiveTab}')
                     TabList[iden].configure(background='#303030')
 
-                    self.DB_Cursor.execute(f'SELECT code_{self.ActiveTab + 1} FROM CodeList_{Data[3]} ')
+                    self.TextBox.insert('1.0', self.TabCode[self.ActiveTab])
+                    print(f'Current Code: {self.TabCode[self.ActiveTab]}')
 
-                    code = self.DB_Cursor.fetchone()
+                    # self.DB_Cursor.execute(f'SELECT code_{self.ActiveTab + 1} FROM CodeList_{Data[3]} ')
+                    # code = self.DB_Cursor.fetchone()
 
-                    self.TextBox.insert('1.0', code)
+                    # self.TextBox.insert('1.0', code)
  
 
                 def NewCodeTab(): 
-                    Tab = tk.Button(TabsFrame, text=str(len(TabCode)), bd=0, fg='#999999', bg='#242424', activebackground='#121212', activeforeground='#999999', command=lambda iden = len(TabCode): SwitchTab(iden-1))
+                    Tab = tk.Button(TabsFrame, text=str(len(self.TabCode) + 1), bd=0, fg='#999999', bg='#242424', activebackground='#121212', activeforeground='#999999', command=lambda iden = len(self.TabCode): SwitchTab(iden))
                     Tab.pack(side=tk.LEFT, fill=tk.BOTH, padx=(0, 1))
-                    TabCode.append('')
+                    self.TabCode.append('')
                     TabList.append(Tab)
 
-                    print(f'O que eu quero {len(TabCode)}')
+                    print()
                     print('New Code Tab')
-                    print(f'len(TabCode) = {len(TabCode)}')
+                    print(f'len(self.TabCode) = {len(self.TabCode)}')
+                    print(f'len(TabList) = {len(TabList)}')
                     print(f'CodeList_{Data[3]}')
                     print(f'cod')
+                    print()
 
-                    self.DB_Cursor.execute(f'ALTER TABLE CodeList_{Data[3]} ADD code_{len(TabCode) - 1} TEXT')
-                    SwitchTab(len(TabCode) - 2)
+                    # self.DB_Cursor.execute(f'ALTER TABLE CodeList_{Data[3]} ADD code_{len(self.TabCode) - 1} TEXT')
+                    SwitchTab(len(self.TabCode) - 1)
 
 
 
@@ -263,25 +280,72 @@ class MainProgram():
         ClearList()
 
         def OpenCode(iden):
+            self.ActiveTab = 0
+
+            TextFont = Font(family='Arial', size=18) #Square721 BT            
+
+            def SwitchTab(iden):
+                if self.ActiveTab != None:
+                    TabList[self.ActiveTab]. configure(background='#242424')
+                
+                TxtBox['text'] = TabCode[iden]
+
+            '''AINDA FALTA FAZER 
+            
+            A PARTE DE MOSTRAR OS O CARD
+            COM AS TABS
+            '''
+
             self.CleanCentralSpace()
 
-            self.ActiveCard = iden
-
-            self.ConnectToDB()
-            self.DB_Cursor.execute(f'''SELECT title, code_1 FROM CodeList_{Data[3]} WHERE id = {iden}''')
+            self.DB_Cursor.execute(f'''SELECT title FROM CodeList_{Data[3]} WHERE id = {iden}''')
             CodeInfo = self.DB_Cursor.fetchone()
 
             TitleFont = Font(size=30)
             TitleLabel = tk.Label(self.CentralSpace, text=CodeInfo[0], font=TitleFont, fg='#999999', bg='#121212')
             TitleLabel.pack(padx=50, pady=25, anchor='w')
-            
-            TextFrame = tk.Frame(self.CentralSpace, bg='#333333', bd=0)
-            TextFrame.pack(padx=(50, 320), pady=(0, 145), anchor='w', fill=tk.BOTH, expand=True)
 
-            TextFont = Font(family='Arial', size=18) #Square721 BT
+            self.ActiveCard = iden
+
+            self.ConnectToDB()
+
+            # self.DB_Cursor.execute(f'''SELECT title, code_1 FROM CodeList_{Data[3]} WHERE id = {iden}''')
+
+            # TODO: Count How Many Columns Are There
+
+            self.DB_Cursor.execute(f'''PRAGMA TABLE_INFO(CodeList_1);''')
+            RowCount = len(self.DB_Cursor.fetchall())
+
+            TextBoxFrame = tk.Frame(self.CentralSpace, bg='lightblue', height=800, width=1500)
+            TextBoxFrame.propagate(0)
+            TextBoxFrame.pack(padx=50, anchor='w')
+
+            TextTabFrame = tk.Frame(TextBoxFrame, bg='#121212')
+            TextTabFrame.pack(side=tk.TOP, fill=tk.X)
+
+            TabsFrame = tk.Frame(TextTabFrame, bg='#121212')
+            TabsFrame.pack(side=tk.LEFT)
+
+            TabList = []
+            TabCode = []
+
+            for tab in range(0, RowCount - 3):
+                Tab = tk.Button(TabsFrame, text=str(tab + 1), bd=0, fg='#999999', bg='#242424', activebackground='#121212', activeforeground='#999999', command=lambda iden = tab: SwitchTab(iden))
+                TabList.append(Tab)
+                Tab.pack(side=tk.LEFT, fill=tk.BOTH, padx=(0, 1))
+
+                # TODO: Get Text From Tab
+                self.DB_Cursor.execute(f'''SELECT code_{tab + 1} FROM CodeList_{Data[3]} WHERE ID = {iden}''')
+                TabCode.append(self.DB_Cursor.fetchone()[0])
+
+            TxtBox = tk.Message(TextBoxFrame, font=TextFont, bg='#333333', fg='#999999', bd=0, padx=10, pady=10)
+            TxtBox.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
+
+            SwitchTab(0)
             
-            TxtBox = tk.Message(TextFrame, text=CodeInfo[1], font=TextFont, bg='#333333', fg='#999999', width=9999, bd=0, padx=10, pady=10)
-            TxtBox.pack(side=tk.TOP, anchor='w')
+            # TextFrame = tk.Frame(self.CentralSpace, bg='#333333', bd=0)
+            # TextFrame.pack(padx=(50, 320), pady=(0, 145), anchor='w', fill=tk.BOTH, expand=True)
+
 
 
         self.ConnectToDB()
