@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="save.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 210 297"
+   height="297mm"
+   width="210mm">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="-8"
+     inkscape:window-height="1027"
+     inkscape:window-width="1920"
+     inkscape:guide-bbox="true"
+     showguides="true"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="535.74418"
+     inkscape:cx="398.58129"
+     inkscape:zoom="2.8"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <rect
+       inkscape:export-ydpi="35.560001"
+       inkscape:export-xdpi="35.560001"
+       inkscape:export-filename="C:\Users\Hércules\Documents\MyProjects\MyCodes\rsc\img\buttons\save.png"
+       y="123.03125"
+       x="82.209816"
+       height="40"
+       width="50"
+       id="rect833"
+       style="fill:#333333;fill-opacity:1;stroke:#999999;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none" />
+    <rect
+       inkscape:export-ydpi="35.560001"
+       inkscape:export-xdpi="35.560001"
+       inkscape:export-filename="C:\Users\Hércules\Documents\MyProjects\MyCodes\rsc\img\buttons\save.png"
+       y="133.03125"
+       x="92.209816"
+       height="30"
+       width="30"
+       id="rect835"
+       style="fill:#999999;fill-opacity:1;stroke:#999999;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none" />
+    <path
+       inkscape:export-ydpi="35.560001"
+       inkscape:export-xdpi="35.560001"
+       inkscape:export-filename="C:\Users\Hércules\Documents\MyProjects\MyCodes\rsc\img\buttons\save.png"
+       inkscape:transform-center-x="-3.7136113e-06"
+       transform="matrix(0.56687583,0,0,0.32728587,93.819622,88.338379)"
+       inkscape:transform-center-y="-1.6666679"
+       d="m 67.722391,106.00174 -17.640546,0 -17.640547,0 8.820271,-15.277165 8.820275,-15.277161 8.820275,15.277161 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="1.5707963"
+       sodipodi:arg1="0.52359878"
+       sodipodi:r2="10.184776"
+       sodipodi:r1="20.369549"
+       sodipodi:cy="95.816963"
+       sodipodi:cx="50.081844"
+       sodipodi:sides="3"
+       id="path839"
+       style="fill:#333333;fill-opacity:1;stroke:#999999;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none"
+       sodipodi:type="star" />
+    <rect
+       inkscape:export-ydpi="35.560001"
+       inkscape:export-xdpi="35.560001"
+       inkscape:export-filename="C:\Users\Hércules\Documents\MyProjects\MyCodes\rsc\img\buttons\save.png"
+       y="113.03125"
+       x="82.209816"
+       height="9.9999981"
+       width="39.999992"
+       id="rect841"
+       style="fill:#333333;fill-opacity:1;stroke:#999999;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none" />
+    <rect
+       inkscape:export-ydpi="35.560001"
+       inkscape:export-xdpi="35.560001"
+       inkscape:export-filename="C:\Users\Hércules\Documents\MyProjects\MyCodes\rsc\img\buttons\save.png"
+       y="113.03125"
+       x="92.209808"
+       height="9.9999895"
+       width="29.999996"
+       id="rect853"
+       style="fill:#999999;fill-opacity:1;stroke:#999999;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none" />
+  </g>
+</svg>
