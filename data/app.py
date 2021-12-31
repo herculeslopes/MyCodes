@@ -85,7 +85,6 @@ class App:
             profileFrame.grid(row=1, column=1)
 
             for profile in self.profiles:
-                print(profile)
                 self.profileButton = widgets.ProfileButton(profileFrame, profile['img_path'], lambda id = profile['id']: self.login_layout(id))
                 self.profileButton.pack(side=tk.LEFT, padx=10)
 
@@ -98,7 +97,6 @@ class App:
 
 
         def login_layout(self, id=0):
-            print(id)
             self.clear_background()
 
             self.headerFrame = widgets.RegularFrame(self.background)
@@ -144,10 +142,9 @@ class App:
             password = self.passwordEntry.get()
 
             query = App.db.execute_query('SELECT * FROM User WHERE username = ? AND password = ?', (username, password))
-            print(query)
+
             if len(query) != 0:
                 user = query[0]
-                print(user)
                 App.user = objects.User(user['id'], user['username'], user['password'], user['img_path'])
                 self.root.destroy()
 
@@ -201,7 +198,7 @@ class App:
                 self.submitButton.pack()
 
                 self.root.bind('<Return>', validate_password)
-                self.root.bind('<Return>', pfp_layout)
+                self.root.bind('<Return>', self.signup)
 
 
             def search_image():
@@ -229,7 +226,7 @@ class App:
                 self.submitButton.pack(pady=20)
 
                 self.root.bind('<Return>', show_profile)
-                self.root.bind('<Return>', password_layout)
+                self.root.bind('<Return>', show_profile)
 
 
             def validate_password(event=None):
@@ -443,9 +440,6 @@ class App:
 
 
         def add_card(self):
-            
-
-            print('added')
             App.db.execute_statement('INSERT INTO Card (title, language, code, user_id) VALUES (?, ?, ?, ?)', ('', '', '', App.user.id))
             card_id = App.db.cursor.lastrowid
 
@@ -468,7 +462,7 @@ class App:
 
 
         def delete_card(self):
-            if len(self.last_open_card) == 0: return
+            if len(self.card_frames) <= 1: return
 
             card_frame = self.last_open_card
             id = str(card_frame.card.id)
@@ -504,7 +498,6 @@ class App:
         def open_card(self, event=None, index=0):
             self.last_open_card.deselect()
     
-            print(event)
             self.card = self.cards[index]
 
             for card_frame in self.card_frames:
@@ -526,9 +519,6 @@ class App:
             self.txtCode.insert(tk.END, self.card.code)
 
             
-            print(self.cards[index])
-
-
         def save_card(self):
             id = self.card.id
             language = self.languageEntry.get()
@@ -543,11 +533,6 @@ class App:
 
             self.refresh_cards()
             
-            return
-
-            save_to_file('codes.txt', code)
-            print(code)
-
         
         def clear_card(self):
             self.languageEntry.delete(0, tk.END)
