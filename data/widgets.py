@@ -44,7 +44,7 @@ class ProfileButton(tk.Button):
 class ProfileLabel(tk.Label):
     def __init__(self, master, img_path):
         super().__init__(master)
-        img = tools.create_resized_image(img_path, (100, 100), True)
+        img = tools.create_resized_image(img_path, (100, 100))
 
         self['bd'] = 0
         self['bg'] = '#121212'

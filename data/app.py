@@ -41,6 +41,7 @@ class App:
         def set_up(self, master):
             self.root = master
             self.root.title(App.Login.TITLE)
+            self.root.iconbitmap('rsc/img/app/logo.ico')
             self.root.geometry(f'{App.Login.WIDTH}x{App.Login.HEIGHT}')
             self.root.resizable(False, False)
 
@@ -197,7 +198,7 @@ class App:
                 self.submitButton = widgets.ImageButton(self.signupForm, 'rsc/img/buttons/submit.png', self.signup)
                 self.submitButton.pack()
 
-                self.root.bind('<Return>', validate_password)
+                self.root.bind('<Return>', pfp_layout)
                 self.root.bind('<Return>', self.signup)
 
 
@@ -308,6 +309,7 @@ class App:
         def set_up(self, master):
             self.root = master
             self.root.title(App.Home.TITLE)
+            self.root.iconbitmap('rsc/img/app/logo.ico')
             self.root.state('zoomed')
 
 

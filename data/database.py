@@ -2,7 +2,7 @@ import sqlite3 as sql
 
 class Database:
     def __init__(self):
-        self.connection = sql.connect('mycodes.db')
+        self.connection = sql.connect('database.db')
         self.cursor = self.connection.cursor()
         self.cursor.row_factory = sql.Row
 

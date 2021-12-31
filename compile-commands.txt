@@ -1,0 +1,1 @@
+pyinstaller --onefile --windowed --icon="rsc/img/app/logo.ico" main.py
