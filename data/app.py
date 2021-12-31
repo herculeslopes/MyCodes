@@ -34,7 +34,7 @@ class App:
 
         def __init__(self, master):
             self.set_up(master)
-            self.load_data()
+            # self.load_data()
             self.main_layout()
             # self.login_layout()
 
@@ -64,6 +64,7 @@ class App:
 
         def main_layout(self):
             self.clear_background()
+            self.load_data()
 
             profileFrame = widgets.RegularFrame(self.background)
             profileFrame.pack()
@@ -73,7 +74,7 @@ class App:
                 self.profileButton = widgets.ProfileButton(profileFrame, profile['img_path'], lambda id = profile['id']: self.login_layout(id))
                 self.profileButton.pack(side=tk.LEFT)
 
-            self.addProfileButton = widgets.ImageButton(profileFrame, 'rsc/img/buttons/add.png', self.signup_layout)
+            self.addProfileButton = widgets.ImageButton(profileFrame, 'rsc/img/buttons/add_pfp.png', self.signup_layout)
             self.addProfileButton.pack(side=tk.RIGHT)
 
 
@@ -118,9 +119,15 @@ class App:
 
         def signup_layout(self):
             self.clear_background()
-            
+        
+            self.headerFrame = widgets.RegularFrame(self.background)
+            self.headerFrame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+
             self.signupForm = widgets.RegularFrame(self.background)
             self.signupForm.pack(expand=True, fill=tk.BOTH, padx=200, pady=20)
+
+            self.returnButton = widgets.ImageButton(self.headerFrame, 'rsc/img/buttons/return.png', self.main_layout)
+            self.returnButton.pack(side=tk.LEFT)
 
             def clear_signup():
                 for widget in self.signupForm.winfo_children():
@@ -165,6 +172,8 @@ class App:
 
             def pfp_layout(): 
                 clear_signup()
+                self.returnButton['command'] = password_layout
+                
                 self.file_path = 'rsc/img/buttons/default_pfp.png'
 
                 infoLabel = widgets.InfoLabel(self.signupForm, 'Click on the image to change it')
@@ -187,9 +196,9 @@ class App:
 
 
             def password_layout():
-                self.username = self.usernameEntry.get()
-
                 clear_signup()
+
+                self.returnButton['command'] = username_layout
 
                 self.passwordLabel = widgets.FormLabel(self.signupForm, 'Password:')
                 self.passwordLabel.pack(pady=(15, 5))
@@ -204,14 +213,24 @@ class App:
                 self.submitButton.pack(pady=20)
 
 
+            def validate_username():
+                self.username = self.usernameEntry.get()
+                if len(self.username) != 0:
+                    password_layout()
+
+
             def username_layout():
+                clear_signup()
+                
+                self.returnButton['command'] = self.main_layout
+
                 self.usernameLabel = widgets.FormLabel(self.signupForm, 'Username:')
                 self.usernameLabel.pack(pady=(30, 5))
 
                 self.usernameEntry = widgets.FormEntry(self.signupForm)
                 self.usernameEntry.pack(fill=tk.X, ipady=7, pady=5)
 
-                self.submitButton = widgets.ImageButton(self.signupForm, 'rsc/img/buttons/submit.png', password_layout)
+                self.submitButton = widgets.ImageButton(self.signupForm, 'rsc/img/buttons/submit.png', validate_username)
                 self.submitButton.pack(pady=20)
 
 
@@ -222,6 +241,7 @@ class App:
             App.db.execute_statement('INSERT INTO User (username, password, img_path) VALUES (?, ?, ?)', (self.username, self.password, self.file_path))
 
             self.main_layout()
+
 
     class Home:
         TITLE = 'MyCodes'
@@ -293,6 +313,8 @@ class App:
             for widget in self.cardlistFrame.winfo_children():
                 widget.destroy()
 
+            self.last_open_card = None
+
             for index, card in enumerate(self.cards):
                 cardFrame = widgets.CardFrame(self.cardlistFrame, card)
                 cardFrame.pack_propagate(0)
@@ -300,6 +322,9 @@ class App:
                 cardFrame.bind('<Button-1>', lambda event, i=index: self.open_card(index=i))
 
                 self.card_frames.append(cardFrame)
+                self.last_open_card = cardFrame
+
+
 
 
         def mainframe_layout(self, event=None):
@@ -349,6 +374,9 @@ class App:
                 self.add_card()
                 self.open_card()
 
+            else:
+                self.open_card(index=self.card_frames.index(self.last_open_card))
+
 
         def add_card(self):
             
@@ -364,8 +392,12 @@ class App:
             cardFrame.pack_propagate(0)
             cardFrame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
             cardFrame.bind('<Button-1>', lambda event, i=self.cards.index(card): self.open_card(index=i))
+            
+            self.card_frames.append(cardFrame)
 
-            self.open_card(self.cards.index(card))
+            if self.last_open_card != None: self.last_open_card.deselect()
+            self.last_open_card = cardFrame
+            self.open_card(index=self.cards.index(card))
 
             # self.list_cards()
             # self.refresh_cards()
@@ -376,21 +408,38 @@ class App:
 
 
         def refresh_cards(self):
+            to_select = self.card_frames.index(self.last_open_card)
+
             for widget in self.cardlistFrame.winfo_children():
                 widget.destroy()
 
             self.load_data()
 
+            self.card_frames = []
             for index, card in enumerate(self.cards):
+
                 cardFrame = widgets.CardFrame(self.cardlistFrame, card)
+                cardFrame.pack_propagate(0)
                 cardFrame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
                 cardFrame.bind('<Button-1>', lambda event, i=index: self.open_card(index=i))
 
                 self.card_frames.append(cardFrame)
 
+            self.last_open_card = self.card_frames[to_select]
+            self.open_card(index=to_select)
+
 
         def open_card(self, event=None, index=0):
+            self.last_open_card.deselect()
+    
+            print(event)
             self.card = self.cards[index]
+
+            for card_frame in self.card_frames:
+                if card_frame.card == self.card:
+                    card_frame.select()
+                    self.last_open_card = card_frame
+
 
             # self.languageEntry['text'] = self.card.language
             # self.titleEntry['text'] = self.card.title
@@ -403,6 +452,8 @@ class App:
 
             self.txtCode.delete('1.0', tk.END)
             self.txtCode.insert(tk.END, self.card.code)
+
+            
             print(self.cards[index])
 
 

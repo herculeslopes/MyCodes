@@ -128,12 +128,32 @@ class CardFrame(tk.Frame):
 
     def __init__(self, master, card):
         super().__init__(master)
+
+        self.card = card
         self['bg'] = CardFrame.BG
         self['height'] = 45
         
-        self.TitleLabel(self, card.title).pack(side=tk.TOP, anchor='w', padx=(5, 0))
-        self.TitleLabel(self, f'Language: {card.language}').pack(side=tk.TOP, anchor='w', padx=(5, 0))
+        title = card.title if len(card.title) != 0 else '_' * 10
+        language = card.language if len(card.language) != 0 else '_' * 10
 
+        self.titleLabel = self.TitleLabel(self, title)
+        self.titleLabel.pack_propagate(0)
+        self.titleLabel.pack(side=tk.TOP, anchor='w', padx=(5, 0))
+
+        self.languageLabel = self.TitleLabel(self, f'Language: {language}')
+        self.languageLabel.pack_propagate(0)
+        self.languageLabel.pack(side=tk.TOP, anchor='w', padx=(5, 0))
+
+
+    def select(self):
+        self['bg'] = '#bdbdbd'
+        self.titleLabel['bg'] = '#bdbdbd'
+        self.languageLabel['bg'] = '#bdbdbd'
+
+    def deselect(self):
+        self['bg'] = '#808080'
+        self.titleLabel['bg'] = '#808080'
+        self.languageLabel['bg'] = '#808080'
 
     class TitleLabel(tk.Label):
         def __init__(self, wrapper, title):
