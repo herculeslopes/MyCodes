@@ -75,12 +75,12 @@ class PasswordEntry(tk.Entry):
 
 
 class InfoLabel(tk.Label):
-    def __init__(self, master, text):
+    def __init__(self, master, text, size=15):
         super().__init__(master)
         self['text'] = text
         self['bg'] = '#121212'
         self['fg'] = '#808080'
-        self['font'] = Font(family='OpenSans', size=15)
+        self['font'] = Font(family='OpenSans', size=size)
 
 
 class PasswordLabel(tk.Label):

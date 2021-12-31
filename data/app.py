@@ -66,13 +66,24 @@ class App:
             self.clear_background()
             self.load_data()
 
+            self.background.grid_rowconfigure(index=0, weight=1)
+            self.background.grid_rowconfigure(index=1, weight=1)
+            self.background.grid_rowconfigure(index=2, weight=1)
+
+            self.background.grid_columnconfigure(index=0, weight=1)
+            self.background.grid_columnconfigure(index=1, weight=1)
+            self.background.grid_columnconfigure(index=2, weight=1)
+
+            infoLabel = widgets.InfoLabel(self.background, 'Choose your Profile', 20)
+            infoLabel.grid(row=0, column=1)
+
             profileFrame = widgets.RegularFrame(self.background)
-            profileFrame.pack()
+            profileFrame.grid(row=1, column=1)
 
             for profile in self.profiles:
                 print(profile)
                 self.profileButton = widgets.ProfileButton(profileFrame, profile['img_path'], lambda id = profile['id']: self.login_layout(id))
-                self.profileButton.pack(side=tk.LEFT)
+                self.profileButton.pack(side=tk.LEFT, padx=10)
 
             self.addProfileButton = widgets.ImageButton(profileFrame, 'rsc/img/buttons/add_pfp.png', self.signup_layout)
             self.addProfileButton.pack(side=tk.RIGHT)
@@ -81,6 +92,12 @@ class App:
         def login_layout(self, id=0):
             print(id)
             self.clear_background()
+
+            self.headerFrame = widgets.RegularFrame(self.background)
+            self.headerFrame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+
+            self.returnButton = widgets.ImageButton(self.headerFrame, 'rsc/img/buttons/return.png', self.main_layout)
+            self.returnButton.pack(side=tk.LEFT)
 
             self.loginForm = widgets.RegularFrame(self.background)
             self.loginForm.pack(expand=True, fill=tk.BOTH, padx=200, pady=20)
@@ -122,12 +139,14 @@ class App:
         
             self.headerFrame = widgets.RegularFrame(self.background)
             self.headerFrame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+            
+            self.returnButton = widgets.ImageButton(self.headerFrame, 'rsc/img/buttons/return.png', self.main_layout)
+            self.returnButton.pack(side=tk.LEFT)
 
             self.signupForm = widgets.RegularFrame(self.background)
             self.signupForm.pack(expand=True, fill=tk.BOTH, padx=200, pady=20)
 
-            self.returnButton = widgets.ImageButton(self.headerFrame, 'rsc/img/buttons/return.png', self.main_layout)
-            self.returnButton.pack(side=tk.LEFT)
+            
 
             def clear_signup():
                 for widget in self.signupForm.winfo_children():
