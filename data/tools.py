@@ -1,4 +1,17 @@
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, ImageOps, ImageDraw
+
+def round_image(img, size):
+    bigsize = (size[0] * 3, size[1] * 3)
+    mask = Image.new('L', bigsize, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.ellipse((0, 0) + bigsize, fill=255)
+    mask = mask.resize(size, Image.ANTIALIAS)
+
+    rounded = ImageOps.fit(img, mask.size, centering=(0.5, 0.5))
+    rounded.putalpha(mask)
+
+    return rounded
+
 
 def create_image(path):
     file = Image.open(path)
@@ -7,9 +20,13 @@ def create_image(path):
     return tkimage
 
 
-def create_resized_image(path, size):
+def create_resized_image(path, size, round=False):
     file = Image.open(path)
-    tkimage = ImageTk.PhotoImage(file.resize(size))
+
+    if round:
+        tkimage = ImageTk.PhotoImage(round_image(file.resize(size, Image.ANTIALIAS), size))
+    else:
+        tkimage = ImageTk.PhotoImage(file.resize(size))
 
     return tkimage
 

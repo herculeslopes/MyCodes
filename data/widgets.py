@@ -41,6 +41,17 @@ class ProfileButton(tk.Button):
         self['command'] = command
 
 
+class ProfileLabel(tk.Label):
+    def __init__(self, master, img_path):
+        super().__init__(master)
+        img = tools.create_resized_image(img_path, (100, 100), True)
+
+        self['bd'] = 0
+        self['bg'] = '#121212'
+        self['image'] = img
+        self.image = img
+
+
 class FormLabel(tk.Label):
     def __init__(self, master, text):
         super().__init__(master)
@@ -179,13 +190,13 @@ class LanguageLabel(tk.Label):
 
 class LanguageEntry(tk.Entry):
     BG = '#121212'
-    FG = '#808080'
+    FG = '#808080' #808080
 
     def __init__(self,master, language):
         super().__init__(master)
         self['bd'] = 0
-        self['bg'] = LanguageLabel.BG
-        self['fg'] = LanguageLabel.FG
+        self['bg'] = LanguageEntry.BG
+        self['fg'] = LanguageEntry.FG
         self['text'] = language
         self['font'] = Font(family='Arial', size=12)
         self['insertbackground'] = '#dbdbdb'
@@ -210,11 +221,19 @@ class TitleEntry(tk.Entry):
     def __init__(self, master, title):
         super().__init__(master)
         self['bd'] = 0
-        self['bg'] = TitleLabel.BG
-        self['fg'] = TitleLabel.FG
+        self['bg'] = TitleEntry.BG
+        self['fg'] = TitleEntry.FG
         self['text'] = title
         self['font'] = Font(family='Arial', size=20)
         self['insertbackground'] = '#dbdbdb'
+
+
+class EntryUnderline(tk.Frame):
+    def __init__(self, master, height=1):
+        super().__init__(master)
+        self['bd'] = 0
+        self['bg'] = '#808080'
+        self['height'] = height
 
 
 class CodeText(tk.Text):

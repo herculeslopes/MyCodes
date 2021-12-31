@@ -62,9 +62,11 @@ class App:
                 widget.destroy()
 
 
-        def main_layout(self):
+        def main_layout(self, event=None):
             self.clear_background()
             self.load_data()
+
+            self.root.title(App.Login.TITLE)
 
             self.background.grid_rowconfigure(index=0, weight=1)
             self.background.grid_rowconfigure(index=1, weight=1)
@@ -74,7 +76,9 @@ class App:
             self.background.grid_columnconfigure(index=1, weight=1)
             self.background.grid_columnconfigure(index=2, weight=1)
 
-            infoLabel = widgets.InfoLabel(self.background, 'Choose your Profile', 20)
+            info_text = 'Choose your Profile' if len(self.profiles) != 0 else 'Create a new Profile'
+
+            infoLabel = widgets.InfoLabel(self.background, info_text, 20)
             infoLabel.grid(row=0, column=1)
 
             profileFrame = widgets.RegularFrame(self.background)
@@ -85,8 +89,12 @@ class App:
                 self.profileButton = widgets.ProfileButton(profileFrame, profile['img_path'], lambda id = profile['id']: self.login_layout(id))
                 self.profileButton.pack(side=tk.LEFT, padx=10)
 
-            self.addProfileButton = widgets.ImageButton(profileFrame, 'rsc/img/buttons/add_pfp.png', self.signup_layout)
-            self.addProfileButton.pack(side=tk.RIGHT)
+            if len(self.profiles) < 3:
+                self.addProfileButton = widgets.ImageButton(profileFrame, 'rsc/img/buttons/add_pfp.png', self.signup_layout)
+                self.addProfileButton.pack(side=tk.RIGHT)
+
+                self.root.bind('<Return>', self.signup_layout)
+                self.root.bind('<Escape>', self.main_layout)
 
 
         def login_layout(self, id=0):
@@ -94,18 +102,24 @@ class App:
             self.clear_background()
 
             self.headerFrame = widgets.RegularFrame(self.background)
-            self.headerFrame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+            self.headerFrame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=(5, 0))
 
             self.returnButton = widgets.ImageButton(self.headerFrame, 'rsc/img/buttons/return.png', self.main_layout)
             self.returnButton.pack(side=tk.LEFT)
 
-            self.loginForm = widgets.RegularFrame(self.background)
-            self.loginForm.pack(expand=True, fill=tk.BOTH, padx=200, pady=20)
+            data = App.db.execute_query('SELECT username, img_path FROM User WHERE id = ?', (str(id)))[0]
+            self.username = data['username']
+            self.img_path = data['img_path']
 
-            self.username = App.db.execute_query('SELECT username FROM User WHERE id = ?', (str(id)))[0]['username']
+
+            self.loginForm = widgets.RegularFrame(self.background)
+            self.loginForm.pack(expand=True, fill=tk.BOTH, padx=200, pady=(0, 20))
+
+            self.profileImage = widgets.ProfileLabel(self.loginForm, self.img_path)
+            self.profileImage.pack()
 
             self.usernameLabel = widgets.FormLabel(self.loginForm, self.username)
-            self.usernameLabel.pack(pady=(40, 5))
+            self.usernameLabel.pack(pady=(20, 5))
 
             # self.usernameEntry = widgets.FormEntry(self.loginForm)
             # self.usernameEntry.pack(fill=tk.X, ipady=7, pady=5)
@@ -116,11 +130,15 @@ class App:
             self.passwordEntry = widgets.PasswordEntry(self.loginForm)
             self.passwordEntry.pack(fill=tk.X, ipady=7, pady=5)
 
+            self.passwordEntry.focus_set()
+
             self.loginButton = widgets.ImageButton(self.loginForm, 'rsc/img/buttons/submit.png', self.login)
             self.loginButton.pack(pady=20)
 
+            self.root.bind('<Return>', self.login)
+
         
-        def login(self):
+        def login(self, event=None):
             # username = self.usernameEntry.get()
             username = self.username
             password = self.passwordEntry.get()
@@ -134,17 +152,18 @@ class App:
                 self.root.destroy()
 
 
-        def signup_layout(self):
+        def signup_layout(self, event=None):
             self.clear_background()
-        
+            self.root.title('Signup')
+
             self.headerFrame = widgets.RegularFrame(self.background)
-            self.headerFrame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+            self.headerFrame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=(5, 0))
             
             self.returnButton = widgets.ImageButton(self.headerFrame, 'rsc/img/buttons/return.png', self.main_layout)
             self.returnButton.pack(side=tk.LEFT)
 
             self.signupForm = widgets.RegularFrame(self.background)
-            self.signupForm.pack(expand=True, fill=tk.BOTH, padx=200, pady=20)
+            self.signupForm.pack(expand=True, fill=tk.BOTH, padx=200)
 
             
 
@@ -153,31 +172,36 @@ class App:
                     widget.destroy()
 
 
-            def show_profile():
+            def show_profile(event=None):
                 clear_signup()
 
-                infoLabel = widgets.InfoLabel(self.signupForm, 'You Profile')
-                infoLabel.pack()
+                infoLabel = widgets.InfoLabel(self.signupForm, 'Your Profile')
+                infoLabel.pack(side=tk.TOP, pady=(0, 20))
 
-                leftFrame = widgets.RegularFrame(self.signupForm)
-                leftFrame.pack(side=tk.LEFT)
+                profileFrame = widgets.RegularFrame(self.signupForm)
+                profileFrame.pack(pady=(0, 30))
 
+                leftFrame = widgets.RegularFrame(profileFrame)
+                leftFrame.pack(side=tk.LEFT, padx=10)
 
                 pfpImage = widgets.ProfileButton(leftFrame, self.file_path, search_image)
-                pfpImage.pack(anchor='e')
+                pfpImage.pack()
 
-                rightFrame = widgets.RegularFrame(self.signupForm)
-                rightFrame.pack(side=tk.RIGHT)
+
+                rightFrame = widgets.RegularFrame(profileFrame)
+                rightFrame.pack(side=tk.RIGHT, padx=10)
 
                 usernameLabel = widgets.FormLabel(rightFrame, self.username)
-                usernameLabel.pack(anchor='w')
+                usernameLabel.pack(anchor='nw')
 
                 passwordLabel = widgets.PasswordLabel(rightFrame, self.password)
-                passwordLabel.pack(anchor='w')
-
+                passwordLabel.pack(anchor='sw')
 
                 self.submitButton = widgets.ImageButton(self.signupForm, 'rsc/img/buttons/submit.png', self.signup)
-                self.submitButton.pack(side=tk.BOTTOM, pady=20)
+                self.submitButton.pack()
+
+                self.root.bind('<Return>', validate_password)
+                self.root.bind('<Return>', pfp_layout)
 
 
             def search_image():
@@ -189,14 +213,14 @@ class App:
                     self.pfpButton.image = pfp
 
 
-            def pfp_layout(): 
+            def pfp_layout(event=None): 
                 clear_signup()
                 self.returnButton['command'] = password_layout
                 
                 self.file_path = 'rsc/img/buttons/default_pfp.png'
 
                 infoLabel = widgets.InfoLabel(self.signupForm, 'Click on the image to change it')
-                infoLabel.pack()
+                infoLabel.pack(pady=(0, 10))
 
                 self.pfpButton = widgets.ImageButton(self.signupForm, 'rsc/img/buttons/default_pfp.png', search_image)
                 self.pfpButton.pack()
@@ -204,8 +228,11 @@ class App:
                 self.submitButton = widgets.ImageButton(self.signupForm, 'rsc/img/buttons/submit.png', show_profile)
                 self.submitButton.pack(pady=20)
 
+                self.root.bind('<Return>', show_profile)
+                self.root.bind('<Return>', password_layout)
 
-            def validate_password():
+
+            def validate_password(event=None):
                 password_1 = self.passwordEntry1.get()
                 password_2 = self.passwordEntry2.get()
 
@@ -214,16 +241,18 @@ class App:
                     pfp_layout()
 
 
-            def password_layout():
+            def password_layout(event=None):
                 clear_signup()
 
                 self.returnButton['command'] = username_layout
 
                 self.passwordLabel = widgets.FormLabel(self.signupForm, 'Password:')
-                self.passwordLabel.pack(pady=(15, 5))
+                self.passwordLabel.pack(pady=(45, 5))
 
                 self.passwordEntry1 = widgets.PasswordEntry(self.signupForm)
                 self.passwordEntry1.pack(fill=tk.X, ipady=7, pady=5)
+
+                self.passwordEntry1.focus_set()
 
                 self.passwordEntry2 = widgets.PasswordEntry(self.signupForm)
                 self.passwordEntry2.pack(fill=tk.X, ipady=7, pady=5)
@@ -231,32 +260,38 @@ class App:
                 self.submitButton = widgets.ImageButton(self.signupForm, 'rsc/img/buttons/submit.png', validate_password)
                 self.submitButton.pack(pady=20)
 
+                self.root.bind('<Return>', validate_password)
+                self.root.bind('<Escape>', username_layout)
 
-            def validate_username():
+            def validate_username(event=None):
                 self.username = self.usernameEntry.get()
                 if len(self.username) != 0:
                     password_layout()
 
 
-            def username_layout():
+            def username_layout(event=None):
                 clear_signup()
                 
                 self.returnButton['command'] = self.main_layout
 
                 self.usernameLabel = widgets.FormLabel(self.signupForm, 'Username:')
-                self.usernameLabel.pack(pady=(30, 5))
+                self.usernameLabel.pack(pady=(70, 5))
 
                 self.usernameEntry = widgets.FormEntry(self.signupForm)
                 self.usernameEntry.pack(fill=tk.X, ipady=7, pady=5)
 
+                self.usernameEntry.focus_set()
+
                 self.submitButton = widgets.ImageButton(self.signupForm, 'rsc/img/buttons/submit.png', validate_username)
                 self.submitButton.pack(pady=20)
 
+                self.root.bind('<Return>', validate_username)
+                self.root.bind('<Escape>', self.main_layout)
 
             username_layout()
 
 
-        def signup(self):
+        def signup(self, event=None):
             App.db.execute_statement('INSERT INTO User (username, password, img_path) VALUES (?, ?, ?)', (self.username, self.password, self.file_path))
 
             self.main_layout()
@@ -359,20 +394,30 @@ class App:
             self.informationFrame.pack(side=tk.TOP, fill=tk.X)
             # self.informationFrame.grid(row=0, column=0)
 
+            self.informationFrame.grid_columnconfigure(index=1, weight=1)
+
             self.lblLanguage = widgets.LanguageLabel(self.informationFrame, 'Language: ')
             self.lblLanguage.grid(row=0, column=0, sticky='w')
 
             self.languageEntry = widgets.LanguageEntry(self.informationFrame, '<LANGUAGE>')
-            self.languageEntry.grid(row=0, column=1, sticky='w')
+            self.languageEntry.grid(row=0, column=1, sticky='ew')
+
+            self.languageEntry.focus_set()
+
+            self.languageUnderline = widgets.EntryUnderline(self.informationFrame)
+            self.languageUnderline.grid(row=0, column=1, sticky='sew')
             
             self.lblTitle = widgets.TitleLabel(self.informationFrame, 'Title: ')
-            self.lblTitle.grid(row=1, column=0, sticky='w')
+            self.lblTitle.grid(row=1, column=0, sticky='w', pady=(10, 0))
 
             self.titleEntry = widgets.TitleEntry(self.informationFrame, '<TITLE>')
-            self.titleEntry.grid(row=1, column=1, sticky='w')
+            self.titleEntry.grid(row=1, column=1, sticky='ew')
+
+            self.titleUnderline = widgets.EntryUnderline(self.informationFrame, 2)
+            self.titleUnderline.grid(row=1, column=1, sticky='sew')
 
             self.codeFrame = widgets.RegularFrame(self.cardForm)
-            self.codeFrame.pack(side=tk.TOP, expand=True, fill=tk.BOTH)
+            self.codeFrame.pack(side=tk.TOP, expand=True, fill=tk.BOTH, pady=(10, 0))
             # self.codeFrame.grid(row=1, column=0)
 
             self.txtCode = widgets.CodeText(self.codeFrame)
@@ -423,7 +468,15 @@ class App:
 
 
         def delete_card(self):
-            pass
+            if len(self.last_open_card) == 0: return
+
+            card_frame = self.last_open_card
+            id = str(card_frame.card.id)
+            App.db.execute_statement('DELETE FROM Card WHERE id = ?', (id,))
+            self.card_frames.remove(card_frame)
+            self.last_open_card = self.card_frames[-1]
+            
+            self.refresh_cards()
 
 
         def refresh_cards(self):
