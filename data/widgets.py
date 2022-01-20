@@ -126,6 +126,46 @@ class SidebarButton(tk.Button):
         self['relief'] = tk.FLAT
         self['command'] = command
 
+        self.pack_propagate(0)
+
+
+class SearchFrame(RegularFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        # self['bd'] = 0
+        # self['bg'] = '#121212'
+        # self['fg'] = LanguageEntry.FG
+        # self['font'] = Font(family='Arial', size=12)
+        # self['insertbackground'] = '#dbdbdb'
+
+        searchEntry = SearchFrame.SearchEntry(self)
+        searchEntry.pack(side=tk.LEFT, expand=True, fill=tk.X)
+
+        clearButton = SearchFrame.ClearButton(self)
+        clearButton.pack(side=tk.RIGHT)
+
+
+    class SearchEntry(tk.Entry):
+        def __init__(self, master):
+            super().__init__(master)
+            self['bd'] = 0
+            self['bg'] = LanguageEntry.BG
+            self['fg'] = LanguageEntry.FG
+            self['font'] = Font(family='Arial', size=12)
+            self['insertbackground'] = '#dbdbdb'
+        
+            self.pack_propagate(0)
+
+
+    class ClearButton(tk.Button):
+        def __init__(self, master):
+            super().__init__(master)
+            self['bd'] = 0
+            self['text'] = 'X'
+            self['font'] = Font(family='Arial', size=12)
+
+            self.pack_propagate(0)
+
 
 class MainFrame(tk.Frame):
     def __init__(self, master):

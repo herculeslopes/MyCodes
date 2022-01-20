@@ -355,9 +355,17 @@ class App:
             self.refreshButton = widgets.SidebarButton(self.sidebarMenu, 'rsc/img/buttons/refresh.png', self.refresh_cards)
             self.refreshButton.pack(side=tk.LEFT, padx=5)
 
+            self.searchButton = widgets.SidebarButton(self.sidebarMenu, 'rsc/img/buttons/search.png', self.search_cards)
+            self.searchButton.pack(side=tk.LEFT, padx=5)
+
+            self.searchFrame = widgets.SearchFrame(self.sidebar)
+            self.searchFrame.pack(side=tk.TOP, fill=tk.X, ipadx=5) # , ipadx=5, ipady=3, padx=3, pady=3
+
+
             self.cardlistFrame = widgets.SideBar(self.sidebar)
             self.cardlistFrame.pack(fill=tk.BOTH)
 
+            
             self.card_frames = []
             self.list_cards()
 
@@ -495,6 +503,10 @@ class App:
 
             self.last_open_card = self.card_frames[to_select]
             self.open_card(index=to_select)
+
+
+        def search_cards(self):
+            pass
 
 
         def open_card(self, event=None, index=0):
