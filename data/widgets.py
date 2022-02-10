@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter.font import Font
-from data import tools
+from data import utilities
 
 # WIDGETS FOR:
 # General Use
@@ -14,7 +14,7 @@ class RegularFrame(tk.Frame):
 class ImageButton(tk.Button):
     def __init__(self, master, img_path, command):
         super().__init__(master)
-        img = tools.create_image(img_path)
+        img = utilities.create_image(img_path)
 
         self['bd'] = 0
         self['bg'] = '#121212'
@@ -30,7 +30,7 @@ class ImageButton(tk.Button):
 class ProfileButton(tk.Button):
     def __init__(self, master, img_path, command):
         super().__init__(master)
-        img = tools.create_resized_image(img_path, (250, 250))
+        img = utilities.create_resized_image(img_path, (250, 250))
 
         self['bd'] = 0
         self['bg'] = '#121212'
@@ -44,7 +44,7 @@ class ProfileButton(tk.Button):
 class ProfileLabel(tk.Label):
     def __init__(self, master, img_path):
         super().__init__(master)
-        img = tools.create_resized_image(img_path, (100, 100))
+        img = utilities.create_resized_image(img_path, (100, 100))
 
         self['bd'] = 0
         self['bg'] = '#121212'
@@ -116,7 +116,7 @@ class SideBar(tk.Frame):
 class SidebarButton(tk.Button):
     def __init__(self, master, img_path, command):
         super().__init__(master)
-        img = tools.create_image(img_path)
+        img = utilities.create_image(img_path)
 
         self['bd'] = 0
         self['bg'] = '#242424'

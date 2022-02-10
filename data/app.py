@@ -1,8 +1,8 @@
 from data.database import Database
 import tkinter as tk
 from tkinter import filedialog
-from data.tools import save_to_file
-from data import tools
+from data.utilities import save_to_file
+from data import utilities
 from data import widgets
 from data import objects
 
@@ -206,7 +206,7 @@ class App:
                 self.file_path = filedialog.askopenfilename(initialdir='/', title='Select A File', filetypes=(("PNG", "*.png"), ("JPEG", "*.jpg"), ("All Files", "*.*")))
 
                 if self.file_path != '':
-                    pfp = tools.create_resized_image(self.file_path, (250, 250))
+                    pfp = utilities.create_resized_image(self.file_path, (250, 250))
                     self.pfpButton['image'] = pfp
                     self.pfpButton.image = pfp
 
